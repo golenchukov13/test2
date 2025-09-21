@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>KIDCIRCLE - Панель организатора</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+   <style>
+       :root {
+           --primary: #4a6cfa;
+           --primary-dark: #3a57cc;
+           --secondary: #ff6b6b;
+           --accent: #00d1b2;
+           --light: #f7fafc;
+           --dark: #1f2430;
+           --gray: #8a93a6;
+           --light-gray: #e2e8f0;
+           --success: #4ade80;
+           --warning: #fbbf24;
+           --danger: #f87171;
+           --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+           --bg-gradient: linear-gradient(135deg, #f5f7ff 0%, #e5e9ff 100%);
+           --surface: rgba(255, 255, 255, 0.95);
+           --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+           --header-height: 60px;
+           --sidebar-width: 250px;
+       }
+      
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+           -webkit-tap-highlight-color: transparent;
+       }
+      
+       body {
+           font-family: 'Nunito', sans-serif;
+           background: var(--bg-gradient);
+           color: var(--dark);
+           line-height: 1.6;
+           overflow-x: hidden;
+           min-height: 100vh;
+       }
+      
+       h1, h2, h3, h4, h5, h6 {
+           font-family: 'Montserrat', sans-serif;
+           font-weight: 700;
+       }
+      
+       /* Layout */
+       .app-container {
+           display: flex;
+           min-height: 100vh;
+       }
+      
+       /* Sidebar */
+       .sidebar {
+           width: var(--sidebar-width);
+           background: var(--surface);
+           box-shadow: var(--card-shadow);
+           padding: 20px 0;
+           position: fixed;
+           height: 100vh;
+           overflow-y: auto;
+           z-index: 100;
+           transition: var(--transition);
+       }
+      
+       .logo {
+           display: flex;
+           align-items: center;
+           gap: 0.5rem;
+           font-weight: 800;
+           font-size: 1.4rem;
+           color: var(--primary);
+           text-decoration: none;
+           padding: 0 20px 20px;
+           border-bottom: 1px solid var(--light-gray);
+           margin-bottom: 20px;
+       }
+      
+       .logo-icon {
+           color: var(--secondary);
+           font-size: 1.6rem;
+       }
+      
+       .org-info {
+           padding: 0 20px 20px;
+           border-bottom: 1px solid var(--light-gray);
+           margin-bottom: 20px;
+       }
+      
+       .org-name {
+           font-weight: 700;
+           margin-bottom: 5px;
+       }
+      
+       .org-plan {
+           font-size: 0.85rem;
+           color: var(--gray);
+           display: flex;
+           align-items: center;
+           gap: 5px;
+       }
+      
+       .menu {
+           list-style: none;
+       }
+      
+       .menu-item {
+           padding: 12px 20px;
+           display: flex;
+           align-items: center;
+           gap: 12px;
+           cursor: pointer;
+           transition: var(--transition);
+           color: var(--dark);
+           text-decoration: none;
+       }
+      
+       .menu-item:hover, .menu-item.active {
+           background: var(--light);
+           color: var(--primary);
+       }
+      
+       .menu-item i {
+           width: 20px;
+           text-align: center;
+       }
+      
+       /* Main Content */
+       .main-content {
+           flex: 1;
+           margin-left: var(--sidebar-width);
+           padding: 20px;
+       }
+      
+       .header {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           margin-bottom: 30px;
+           background: var(--surface);
+           padding: 15px 20px;
+           border-radius: 12px;
+           box-shadow: var(--card-shadow);
+       }
+      
+       .page-title {
+           font-size: 1.5rem;
+       }
+      
+       .header-actions {
+           display: flex;
+           gap: 15px;
+           align-items: center;
+       }
+      
+       .header-icon {
+           font-size: 1.2rem;
+           color: var(--dark);
+           position: relative;
+           cursor: pointer;
+       }
+      
+       .notification-badge {
+           position: absolute;
+           top: -5px;
+           right: -5px;
+           background: var(--secondary);
+           color: white;
+           border-radius: 50%;
+           width: 18px;
+           height: 18px;
+           font-size: 0.7rem;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+       }
+      
+       .user-profile {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+           cursor: pointer;
+       }
+      
+       .user-avatar {
+           width: 40px;
+           height: 40px;
+           border-radius: 50%;
+           background: var(--primary);
+           color: white;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-weight: 600;
+       }
+      
+       /* Dashboard */
+       .stats-cards {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+           gap: 20px;
+           margin-bottom: 30px;
+       }
+      
+       .stat-card {
+           background: var(--surface);
+           padding: 20px;
+           border-radius: 12px;
+           box-shadow: var(--card-shadow);
+       }
+      
+       .stat-icon {
+           width: 50px;
+           height: 50px;
+           border-radius: 12px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 1.5rem;
+           margin-bottom: 15px;
+       }
+      
+       .stat-value {
+           font-size: 1.8rem;
+           font-weight: 700;
+           margin-bottom: 5px;
+       }
+      
+       .stat-label {
+           color: var(--gray);
+           font-size: 0.9rem;
+       }
+      
+       .stat-change {
+           margin-top: 10px;
+           font-size: 0.85rem;
+           display: flex;
+           align-items: center;
+           gap: 5px;
+       }
+      
+       .change-up {
+           color: var(--success);
+       }
+      
+       .change-down {
+           color: var(--danger);
+       }
+      
+       /* Activities Table */
+       .activities-table {
+           background: var(--surface);
+           border-radius: 12px;
+           box-shadow: var(--card-shadow);
+           overflow: hidden;
+           margin-bottom: 30px;
+       }
+      
+       .table-header {
+           padding: 20px;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           border-bottom: 1px solid var(--light-gray);
+       }
+      
+       .table-title {
+           font-size: 1.2rem;
+       }
+      
+       .table-actions {
+           display: flex;
+           gap: 10px;
+       }
+      
+       .btn {
+           padding: 8px 16px;
+           border-radius: 8px;
+           border: none;
+           cursor: pointer;
+           font-weight: 600;
+           transition: var(--transition);
+           display: flex;
+           align-items: center;
+           gap: 8px;
+       }
+      
+       .btn-primary {
+           background: var(--primary);
+           color: white;
+       }
+      
+       .btn-primary:hover {
+           background: var(--primary-dark);
+       }
+      
+       .btn-outline {
+           background: transparent;
+           border: 1px solid var(--light-gray);
+       }
+      
+       .btn-outline:hover {
+           background: var(--light);
+       }
+      
+       table {
+           width: 100%;
+           border-collapse: collapse;
+       }
+      
+       th, td {
+           padding: 15px 20px;
+           text-align: left;
+       }
+      
+       th {
+           background: var(--light);
+           font-weight: 600;
+       }
+      
+       tr {
+           border-bottom: 1px solid var(--light-gray);
+       }
+      
+       tr:last-child {
+           border-bottom: none;
+       }
+      
+       .status-badge {
+           padding: 5px 10px;
+           border-radius: 20px;
+           font-size: 0.85rem;
+           font-weight: 600;
+       }
+      
+       .status-active {
+           background: rgba(74, 222, 128, 0.2);
+           color: var(--success);
+       }
+      
+       .status-draft {
+           background: rgba(251, 191, 36, 0.2);
+           color: var(--warning);
+       }
+      
+       .status-paused {
+           background: rgba(248, 113, 113, 0.2);
+           color: var(--danger);
+       }
+      
+       .action-btn {
+           padding: 5px;
+           border-radius: 5px;
+           cursor: pointer;
+           color: var(--gray);
+           transition: var(--transition);
+       }
+      
+       .action-btn:hover {
+           color: var(--primary);
+           background: var(--light);
+       }
+      
+       /* Modal */
+       .modal-overlay {
+           position: fixed;
+           top: 0;
+           left: 0;
+           right: 0;
+           bottom: 0;
+           background: rgba(0, 0, 0, 0.5);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           z-index: 1000;
+           opacity: 0;
+           visibility: hidden;
+           transition: var(--transition);
+       }
+      
+       .modal-overlay.active {
+           opacity: 1;
+           visibility: visible;
+       }
+      
+       .modal {
+           background: white;
+           border-radius: 12px;
+           width: 90%;
+           max-width: 600px;
+           max-height: 90vh;
+           overflow-y: auto;
+           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+           transform: translateY(20px);
+           transition: var(--transition);
+       }
+      
+       .modal-overlay.active .modal {
+           transform: translateY(0);
+       }
+      
+       .modal-header {
+           padding: 20px;
+           border-bottom: 1px solid var(--light-gray);
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+       }
+      
+       .modal-title {
+           font-size: 1.2rem;
+       }
+      
+       .modal-close {
+           font-size: 1.5rem;
+           cursor: pointer;
+           color: var(--gray);
+       }
+      
+       .modal-body {
+           padding: 20px;
+       }
+      
+       .form-group {
+           margin-bottom: 20px;
+       }
+      
+       .form-label {
+           display: block;
+           margin-bottom: 8px;
+           font-weight: 600;
+       }
+      
+       .form-input, .form-select, .form-textarea {
+           width: 100%;
+           padding: 12px 15px;
+           border: 1px solid var(--light-gray);
+           border-radius: 8px;
+           font-family: 'Nunito', sans-serif;
+           font-size: 1rem;
+       }
+      
+       .form-textarea {
+           min-height: 120px;
+           resize: vertical;
+       }
+      
+       .form-row {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 15px;
+       }
+      
+       .modal-footer {
+           padding: 20px;
+           border-top: 1px solid var(--light-gray);
+           display: flex;
+           justify-content: flex-end;
+           gap: 10px;
+       }
+      
+       /* Responsive */
+       @media (max-width: 992px) {
+           .sidebar {
+               transform: translateX(-100%);
+           }
+          
+           .sidebar.active {
+               transform: translateX(0);
+           }
+          
+           .main-content {
+               margin-left: 0;
+           }
+          
+           .menu-toggle {
+               display: block;
+           }
+       }
+      
+       /* Toggle button for mobile */
+       .menu-toggle {
+           display: none;
+           background: var(--primary);
+           color: white;
+           border: none;
+           border-radius: 8px;
+           width: 40px;
+           height: 40px;
+           align-items: center;
+           justify-content: center;
+           cursor: pointer;
+           font-size: 1.2rem;
+       }
+      
+       @media (max-width: 992px) {
+           .menu-toggle {
+               display: flex;
+           }
+       }
+      
+       /* Additional styles for other screens */
+       .chart-container {
+           background: var(--surface);
+           border-radius: 12px;
+           padding: 20px;
+           box-shadow: var(--card-shadow);
+           margin-bottom: 30px;
+       }
+      
+       .chart-title {
+           font-size: 1.2rem;
+           margin-bottom: 20px;
+       }
+      
+       .chart-placeholder {
+           height: 300px;
+           background: var(--light);
+           border-radius: 8px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           color: var(--gray);
+       }
+      
+       /* Login screen */
+       .login-container {
+           min-height: 100vh;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           background: var(--bg-gradient);
+           padding: 20px;
+       }
+      
+       .login-box {
+           background: var(--surface);
+           border-radius: 12px;
+           box-shadow: var(--card-shadow);
+           width: 100%;
+           max-width: 400px;
+           padding: 30px;
+       }
+      
+       .login-logo {
+           text-align: center;
+           margin-bottom: 30px;
+       }
+      
+       .login-title {
+           font-size: 1.5rem;
+           margin-bottom: 20px;
+           text-align: center;
+       }
+      
+       /* Utility classes */
+       .hidden {
+           display: none;
+       }
+   </style>
+</head>
+<body>
+   <!-- Login Screen -->
+   <div class="login-container" id="login-screen">
+       <div class="login-box">
+           <div class="login-logo">
+               <div class="logo">
+                   <i class="fas fa-child logo-icon"></i>
+                   <span>KIDCIRCLE</span>
+               </div>
+           </div>
+           <h2 class="login-title">Вход для организаций</h2>
+           <div class="form-group">
+               <label class="form-label">Email</label>
+               <input type="email" class="form-input" placeholder="Ваш email" id="login-email">
+           </div>
+           <div class="form-group">
+               <label class="form-label">Пароль</label>
+               <input type="password" class="form-input" placeholder="Ваш пароль" id="login-password">
+           </div>
+           <div class="form-group">
+               <button class="btn btn-primary" style="width: 100%" onclick="login()">Войти</button>
+           </div>
+           <div style="text-align: center; margin-top: 20px;">
+               <a href="#" style="color: var(--primary); text-decoration: none;">Забыли пароль?</a>
+           </div>
+           <div style="text-align: center; margin-top: 10px;">
+               <span style="color: var(--gray);">Еще нет аккаунта? </span>
+               <a href="#" style="color: var(--primary); text-decoration: none;" onclick="showRegisterModal()">Зарегистрироваться</a>
+           </div>
+       </div>
+   </div>
+
+
+   <!-- Main App -->
+   <div class="app-container hidden" id="app-container">
+       <!-- Sidebar -->
+       <div class="sidebar" id="sidebar">
+           <a href="#" class="logo">
+               <i class="fas fa-child logo-icon"></i>
+               <span>KIDCIRCLE</span>
+           </a>
+          
+           <div class="org-info">
+               <div class="org-name">Студия "Арт-Класс"</div>
+               <div class="org-plan">
+                   <i class="fas fa-crown" style="color: var(--warning)"></i>
+                   <span>Премиум аккаунт</span>
+               </div>
+           </div>
+          
+           <ul class="menu">
+               <li>
+                   <a class="menu-item active" data-screen="dashboard">
+                       <i class="fas fa-chart-pie"></i>
+                       <span>Дашборд</span>
+                   </a>
+               </li>
+               <li>
+                   <a class="menu-item" data-screen="activities">
+                       <i class="fas fa-dumbbell"></i>
+                       <span>Кружки и занятия</span>
+                   </a>
+               </li>
+               <li>
+                   <a class="menu-item" data-screen="schedule">
+                       <i class="fas fa-calendar-alt"></i>
+                       <span>Расписание</span>
+                   </a>
+               </li>
+               <li>
+                   <a class="menu-item" data-screen="students">
+                       <i class="fas fa-users"></i>
+                       <span>Ученики</span>
+                   </a>
+               </li>
+               <li>
+                   <a class="menu-item" data-screen="finance">
+                       <i class="fas fa-credit-card"></i>
+                       <span>Финансы</span>
+                   </a>
+               </li>
+               <li>
+                   <a class="menu-item" data-screen="reviews">
+                       <i class="fas fa-star"></i>
+                       <span>Отзывы</span>
+                   </a>
+               </li>
+               <li>
+                   <a class="menu-item" data-screen="analytics">
+                       <i class="fas fa-chart-line"></i>
+                       <span>Аналитика</span>
+                   </a>
+               </li>
+               <li>
+                   <a class="menu-item" data-screen="settings">
+                       <i class="fas fa-cog"></i>
+                       <span>Настройки</span>
+                   </a>
+               </li>
+           </ul>
+       </div>
+      
+       <!-- Main Content -->
+       <div class="main-content">
+           <!-- Header -->
+           <div class="header">
+               <div style="display: flex; align-items: center; gap: 15px;">
+                   <button class="menu-toggle" id="menu-toggle">
+                       <i class="fas fa-bars"></i>
+                   </button>
+                   <h1 class="page-title" id="page-title">Дашборд</h1>
+               </div>
+              
+               <div class="header-actions">
+                   <div class="header-icon">
+                       <i class="fas fa-bell"></i>
+                       <div class="notification-badge">3</div>
+                   </div>
+                   <div class="header-icon">
+                       <i class="fas fa-comments"></i>
+                       <div class="notification-badge">7</div>
+                   </div>
+                   <div class="user-profile">
+                       <div class="user-avatar">AC</div>
+                       <div>Артём К.</div>
+                   </div>
+               </div>
+           </div>
+          
+           <!-- Dashboard Screen -->
+           <div class="screen active" id="dashboard-screen">
+               <div class="stats-cards">
+                   <div class="stat-card">
+                       <div class="stat-icon" style="background: rgba(74, 108, 250, 0.2); color: var(--primary);">
+                           <i class="fas fa-users"></i>
+                       </div>
+                       <div class="stat-value">247</div>
+                       <div class="stat-label">Всего учеников</div>
+                       <div class="stat-change change-up">
+                           <i class="fas fa-arrow-up"></i>
+                           <span>12% за месяц</span>
+                       </div>
+                   </div>
+                  
+                   <div class="stat-card">
+                       <div class="stat-icon" style="background: rgba(0, 209, 178, 0.2); color: var(--accent);">
+                           <i class="fas fa-calendar-check"></i>
+                       </div>
+                       <div class="stat-value">84</div>
+                       <div class="stat-label">Активные записи</div>
+                       <div class="stat-change change-up">
+                           <i class="fas fa-arrow-up"></i>
+                           <span>5% за неделю</span>
+                       </div>
+                   </div>
+                  
+                   <div class="stat-card">
+                       <div class="stat-icon" style="background: rgba(255, 107, 107, 0.2); color: var(--secondary);">
+                           <i class="fas fa-ruble-sign"></i>
+                       </div>
+                       <div class="stat-value">168,500₽</div>
+                       <div class="stat-label">Доход за месяц</div>
+                       <div class="stat-change change-up">
+                           <i class="fas fa-arrow-up"></i>
+                           <span>8% за месяц</span>
+                       </div>
+                   </div>
+                  
+                   <div class="stat-card">
+                       <div class="stat-icon" style="background: rgba(251, 191, 36, 0.2); color: var(--warning);">
+                           <i class="fas fa-star"></i>
+                       </div>
+                       <div class="stat-value">4.8</div>
+                       <div class="stat-label">Средний рейтинг</div>
+                       <div class="stat-change change-up">
+                           <i class="fas fa-arrow-up"></i>
+                           <span>0.2 за месяц</span>
+                       </div>
+                   </div>
+               </div>
+              
+               <div class="chart-container">
+                   <h3 class="chart-title">Посещаемость занятий</h3>
+                   <div class="chart-placeholder">
+                       <i class="fas fa-chart-bar" style="font-size: 2rem; margin-right: 10px;"></i>
+                       <span>График посещаемости занятий</span>
+                   </div>
+               </div>
+              
+               <div class="activities-table">
+                   <div class="table-header">
+                       <h3 class="table-title">Недавние записи</h3>
+                       <div class="table-actions">
+                           <button class="btn btn-outline">
+                               <i class="fas fa-filter"></i>
+                               <span>Фильтр</span>
+                           </button>
+                           <button class="btn btn-outline">
+                               <i class="fas fa-download"></i>
+                               <span>Экспорт</span>
+                           </button>
+                       </div>
+                   </div>
+                  
+                   <table>
+                       <thead>
+                           <tr>
+                               <th>Ученик</th>
+                               <th>Кружок</th>
+                               <th>Дата записи</th>
+                               <th>Статус</th>
+                               <th>Действия</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <tr>
+                               <td>Мария Иванова</td>
+                               <td>Рисование для детей</td>
+                               <td>12.05.2023</td>
+                               <td><span class="status-badge status-active">Активно</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>Алексей Петров</td>
+                               <td>Лепка из глины</td>
+                               <td>11.05.2023</td>
+                               <td><span class="status-badge status-active">Активно</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>София Сидорова</td>
+                               <td>Акварельная живопись</td>
+                               <td>10.05.2023</td>
+                               <td><span class="status-badge status-active">Активно</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>Дмитрий Кузнецов</td>
+                               <td>Скетчинг для подростков</td>
+                               <td>09.05.2023</td>
+                               <td><span class="status-badge status-paused">На паузе</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+          
+           <!-- Activities Screen -->
+           <div class="screen" id="activities-screen">
+               <div class="activities-table">
+                   <div class="table-header">
+                       <h3 class="table-title">Мои кружки и занятия</h3>
+                       <div class="table-actions">
+                           <button class="btn btn-primary" onclick="showAddActivityModal()">
+                               <i class="fas fa-plus"></i>
+                               <span>Добавить кружок</span>
+                           </button>
+                       </div>
+                   </div>
+                  
+                   <table>
+                       <thead>
+                           <tr>
+                               <th>Название</th>
+                               <th>Возраст</th>
+                               <th>Цена</th>
+                               <th>Записано</th>
+                               <th>Статус</th>
+                               <th>Действия</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <tr>
+                               <td>Рисование для детей</td>
+                               <td>5-10 лет</td>
+                               <td>2000₽/мес</td>
+                               <td>24/25</td>
+                               <td><span class="status-badge status-active">Активно</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                       <div class="action-btn"><i class="fas fa-chart-bar"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>Лепка из глины</td>
+                               <td>7-12 лет</td>
+                               <td>2500₽/мес</td>
+                               <td>15/20</td>
+                               <td><span class="status-badge status-active">Активно</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                       <div class="action-btn"><i class="fas fa-chart-bar"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>Акварельная живопись</td>
+                               <td>10-16 лет</td>
+                               <td>3000₽/мес</td>
+                               <td>12/15</td>
+                               <td><span class="status-badge status-active">Активно</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                       <div class="action-btn"><i class="fas fa-chart-bar"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>Скетчинг для подростков</td>
+                               <td>12-18 лет</td>
+                               <td>3500₽/мес</td>
+                               <td>8/12</td>
+                               <td><span class="status-badge status-paused">На паузе</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                       <div class="action-btn"><i class="fas fa-chart-bar"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>Комиксы и иллюстрация</td>
+                               <td>10-16 лет</td>
+                               <td>3200₽/мес</td>
+                               <td>0/15</td>
+                               <td><span class="status-badge status-draft">Черновик</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-pencil-alt"></i></div>
+                                       <div class="action-btn"><i class="fas fa-chart-bar"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+          
+           <!-- Other screens would be defined here -->
+           <div class="screen" id="schedule-screen">
+               <div class="chart-container">
+                   <h3 class="chart-title">Расписание занятий</h3>
+                   <div class="chart-placeholder">
+                       <i class="fas fa-calendar-alt" style="font-size: 2rem; margin-right: 10px;"></i>
+                       <span>Календарь и расписание занятий</span>
+                   </div>
+               </div>
+           </div>
+          
+           <div class="screen" id="students-screen">
+               <div class="activities-table">
+                   <div class="table-header">
+                       <h3 class="table-title">Мои ученики</h3>
+                       <div class="table-actions">
+                           <button class="btn btn-outline">
+                               <i class="fas fa-filter"></i>
+                               <span>Фильтр</span>
+                           </button>
+                           <button class="btn btn-outline">
+                               <i class="fas fa-download"></i>
+                               <span>Экспорт</span>
+                           </button>
+                       </div>
+                   </div>
+                  
+                   <table>
+                       <thead>
+                           <tr>
+                               <th>Имя</th>
+                               <th>Возраст</th>
+                               <th>Кружок</th>
+                               <th>Дата записи</th>
+                               <th>Статус</th>
+                               <th>Действия</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <tr>
+                               <td>Мария Иванова</td>
+                               <td>8 лет</td>
+                               <td>Рисование для детей</td>
+                               <td>12.05.2023</td>
+                               <td><span class="status-badge status-active">Активно</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-comment"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <tr>
+                               <td>Алексей Петров</td>
+                               <td>10 лет</td>
+                               <td>Лепка из глины</td>
+                               <td>11.05.2023</td>
+                               <td><span class="status-badge status-active">Активно</span></td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-eye"></i></div>
+                                       <div class="action-btn"><i class="fas fa-comment"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <!-- More rows would be here -->
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+          
+           <!-- Placeholder for other screens -->
+           <div class="screen" id="finance-screen">
+               <div class="chart-container">
+                   <h3 class="chart-title">Финансовая аналитика</h3>
+                   <div class="chart-placeholder">
+                       <i class="fas fa-chart-line" style="font-size: 2rem; margin-right: 10px;"></i>
+                       <span>Графики доходов и расходов</span>
+                   </div>
+               </div>
+           </div>
+          
+           <div class="screen" id="reviews-screen">
+               <div class="activities-table">
+                   <div class="table-header">
+                       <h3 class="table-title">Отзывы о моих кружках</h3>
+                   </div>
+                  
+                   <table>
+                       <thead>
+                           <tr>
+                               <th>Ученик</th>
+                               <th>Кружок</th>
+                               <th>Оценка</th>
+                               <th>Отзыв</th>
+                               <th>Дата</th>
+                               <th>Действия</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <tr>
+                               <td>Мария Иванова</td>
+                               <td>Рисование для детей</td>
+                               <td>
+                                   <div style="color: var(--warning);">
+                                       <i class="fas fa-star"></i>
+                                       <i class="fas fa-star"></i>
+                                       <i class="fas fa-star"></i>
+                                       <i class="fas fa-star"></i>
+                                       <i class="fas fa-star"></i>
+                                   </div>
+                               </td>
+                               <td>Очень нравится преподаватель и атмосфера!</td>
+                               <td>15.05.2023</td>
+                               <td>
+                                   <div style="display: flex; gap: 10px;">
+                                       <div class="action-btn"><i class="fas fa-reply"></i></div>
+                                   </div>
+                               </td>
+                           </tr>
+                           <!-- More rows would be here -->
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+          
+           <div class="screen" id="analytics-screen">
+               <div class="chart-container">
+                   <h3 class="chart-title">Аналитика посещений</h3>
+                   <div class="chart-placeholder">
+                       <i class="fas fa-analytics" style="font-size: 2rem; margin-right: 10px;"></i>
+                       <span>Детальная аналитика и отчеты</span>
+                   </div>
+               </div>
+           </div>
+          
+           <div class="screen" id="settings-screen">
+               <div class="chart-container">
+                   <h3 class="chart-title">Настройки организации</h3>
+                   <div class="chart-placeholder">
+                       <i class="fas fa-cogs" style="font-size: 2rem; margin-right: 10px;"></i>
+                       <span>Настройки профиля, уведомлений и т.д.</span>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+  
+   <!-- Add Activity Modal -->
+   <div class="modal-overlay" id="add-activity-modal">
+       <div class="modal">
+           <div class="modal-header">
+               <h3 class="modal-title">Добавить новый кружок</h3>
+               <div class="modal-close" onclick="closeModal('add-activity-modal')">&times;</div>
+           </div>
+           <div class="modal-body">
+               <div class="form-group">
+                   <label class="form-label">Название кружка</label>
+                   <input type="text" class="form-input" placeholder="Введите название">
+               </div>
+              
+               <div class="form-group">
+                   <label class="form-label">Описание</label>
+                   <textarea class="form-textarea" placeholder="Опишите кружок"></textarea>
+               </div>
+              
+               <div class="form-row">
+                   <div class="form-group">
+                       <label class="form-label">Минимальный возраст</label>
+                       <input type="number" class="form-input" placeholder="5">
+                   </div>
+                  
+                   <div class="form-group">
+                       <label class="form-label">Максимальный возраст</label>
+                       <input type="number" class="form-input" placeholder="12">
+                   </div>
+               </div>
+              
+               <div class="form-row">
+                   <div class="form-group">
+                       <label class="form-label">Цена в месяц (₽)</label>
+                       <input type="number" class="form-input" placeholder="2000">
+                   </div>
+                  
+                   <div class="form-group">
+                       <label class="form-label">Максимальное количество учеников</label>
+                       <input type="number" class="form-input" placeholder="15">
+                   </div>
+               </div>
+              
+               <div class="form-group">
+                   <label class="form-label">Категория</label>
+                   <select class="form-select">
+                       <option>Творчество</option>
+                       <option>Спорт</option>
+                       <option>Наука</option>
+                       <option>Музыка</option>
+                       <option>Танцы</option>
+                       <option>Развитие</option>
+                   </select>
+               </div>
+              
+               <div class="form-group">
+                   <label class="form-label">Загрузить изображение</label>
+                   <input type="file" class="form-input">
+               </div>
+           </div>
+           <div class="modal-footer">
+               <button class="btn btn-outline" onclick="closeModal('add-activity-modal')">Отмена</button>
+               <button class="btn btn-primary">Сохранить</button>
+           </div>
+       </div>
+   </div>
+  
+   <!-- Register Modal -->
+   <div class="modal-overlay" id="register-modal">
+       <div class="modal">
+           <div class="modal-header">
+               <h3 class="modal-title">Регистрация организации</h3>
+               <div class="modal-close" onclick="closeModal('register-modal')">&times;</div>
+           </div>
+           <div class="modal-body">
+               <div class="form-group">
+                   <label class="form-label">Название организации</label>
+                   <input type="text" class="form-input" placeholder="Введите название">
+               </div>
+              
+               <div class="form-group">
+                   <label class="form-label">Email</label>
+                   <input type="email" class="form-input" placeholder="Ваш email">
+               </div>
+              
+               <div class="form-group">
+                   <label class="form-label">Пароль</label>
+                   <input type="password" class="form-input" placeholder="Придумайте пароль">
+               </div>
+              
+               <div class="form-group">
+                   <label class="form-label">Подтверждение пароля</label>
+                   <input type="password" class="form-input" placeholder="Повторите пароль">
+               </div>
+              
+               <div class="form-group">
+                   <label class="form-label">Город</label>
+                   <input type="text" class="form-input" placeholder="Введите город">
+               </div>
+              
+               <div class="form-group">
+                   <label class="form-label">Описание организации</label>
+                   <textarea class="form-textarea" placeholder="Расскажите о вашей организации"></textarea>
+               </div>
+           </div>
+           <div class="modal-footer">
+               <button class="btn btn-outline" onclick="closeModal('register-modal')">Отмена</button>
+               <button class="btn btn-primary">Зарегистрироваться</button>
+           </div>
+       </div>
+   </div>
+
+
+   <script>
+       // DOM elements
+       const loginScreen = document.getElementById('login-screen');
+       const appContainer = document.getElementById('app-container');
+       const menuToggle = document.getElementById('menu-toggle');
+       const sidebar = document.getElementById('sidebar');
+       const menuItems = document.querySelectorAll('.menu-item');
+       const screens = document.querySelectorAll('.screen');
+       const pageTitle = document.getElementById('page-title');
+      
+       // Login function
+       function login() {
+           const email = document.getElementById('login-email').value;
+           const password = document.getElementById('login-password').value;
+          
+           if (email && password) {
+               loginScreen.classList.add('hidden');
+               appContainer.classList.remove('hidden');
+           } else {
+               alert('Пожалуйста, заполните все поля');
+           }
+       }
+      
+       // Toggle sidebar on mobile
+       menuToggle.addEventListener('click', function() {
+           sidebar.classList.toggle('active');
+       });
+      
+       // Navigation between screens
+       menuItems.forEach(item => {
+           item.addEventListener('click', function(e) {
+               e.preventDefault();
+              
+               // Remove active class from all menu items
+               menuItems.forEach(i => i.classList.remove('active'));
+              
+               // Add active class to clicked item
+               this.classList.add('active');
+              
+               // Get target screen
+               const targetScreenId = this.getAttribute('data-screen') + '-screen';
+              
+               // Hide all screens
+               screens.forEach(screen => {
+                   screen.classList.remove('active');
+               });
+              
+               // Show target screen
+               document.getElementById(targetScreenId).classList.add('active');
+              
+               // Update page title
+               pageTitle.textContent = this.querySelector('span').textContent;
+              
+               // Close sidebar on mobile after selection
+               if (window.innerWidth < 992) {
+                   sidebar.classList.remove('active');
+               }
+           });
+       });
+      
+       // Modal functions
+       function showAddActivityModal() {
+           document.getElementById('add-activity-modal').classList.add('active');
+       }
+      
+       function showRegisterModal() {
+           document.getElementById('register-modal').classList.add('active');
+       }
+      
+       function closeModal(modalId) {
+           document.getElementById(modalId).classList.remove('active');
+       }
+      
+       // Close modals when clicking outside
+       document.querySelectorAll('.modal-overlay').forEach(overlay => {
+           overlay.addEventListener('click', function(e) {
+               if (e.target === this) {
+                   this.classList.remove('active');
+               }
+           });
+       });
+      
+       // Initialize the app
+       document.addEventListener('DOMContentLoaded', function() {
+           // Check if user is logged in (for demo purposes)
+           const isLoggedIn = localStorage.getItem('orgLoggedIn');
+           if (isLoggedIn) {
+               loginScreen.classList.add('hidden');
+               appContainer.classList.remove('hidden');
+           }
+       });
+   </script>
+</body>
+</html>
+
+
