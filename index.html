@@ -368,16 +368,30 @@
         .course-actions {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
         
         .action-btn {
-            flex: 1;
+            flex: 0 0 auto;
             padding: 10px;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
+        }
+
+        /* Выровненные карточки групп */
+        .course-card .course-stats {
+            align-items: center;
+        }
+        .course-card .course-stat .stat-number {
+            line-height: 1.2;
+        }
+        .course-card .course-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
         
         .action-btn.primary {
@@ -388,6 +402,20 @@
         .action-btn.secondary {
             background: var(--light);
             color: var(--dark);
+        }
+
+        /* Компактная кнопка добавления кружка */
+        .add-club-btn {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--light-gray);
+            padding: 8px 14px;
+            border-radius: 9999px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+        .add-club-btn:hover {
+            background: rgba(44, 62, 80, 0.03);
+            border-color: #d7dde8;
         }
         
         /* Экран управления расписанием */
@@ -805,6 +833,14 @@
                     <i class="fas fa-users nav-icon"></i>
                     <span class="nav-text">Клиенты</span>
                 </div>
+                <div class="nav-item" data-screen="employees-screen">
+                    <i class="fas fa-id-badge nav-icon"></i>
+                    <span class="nav-text">Сотрудники</span>
+                </div>
+                <div class="nav-item" data-screen="support-screen">
+                    <i class="fas fa-headset nav-icon"></i>
+                    <span class="nav-text">Техподдержка</span>
+                </div>
                 <div class="nav-item" data-screen="finance-screen">
                     <i class="fas fa-credit-card nav-icon"></i>
                     <span class="nav-text">Финансы</span>
@@ -930,115 +966,117 @@
             <div class="screen" id="courses-screen">
                 <div class="section-title">
                     <h1>Кружки и секции</h1>
-                    <button class="action-btn primary">Добавить кружок</button>
+                    <button class="action-btn add-club-btn" id="add-course-btn"><i class="fas fa-plus" style="margin-right:8px;"></i>Добавить кружок</button>
                 </div>
                 
-                <div class="courses-grid">
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-title">Робототехника</div>
-                            <div class="course-category">Наука и технологии</div>
+                <div class="courses-grid" id="courses-grid"></div>
+            </div>
+
+            <!-- Детали кружка -->
+            <div class="screen" id="course-detail-screen">
+                <div class="section-title">
+                    <h1>Карточка кружка</h1>
+                    <button class="action-btn secondary" id="back-to-courses"><i class="fas fa-arrow-left" style="margin-right:8px;"></i>К списку кружков</button>
+                </div>
+
+                <div class="settings-container" id="course-detail">
+                    <div style="display:flex;gap:20px;align-items:center;margin-bottom:20px;">
+                        <div class="course-title" id="detail-title" style="margin:0;font-size:1.4rem;font-weight:800;color:var(--primary);"></div>
+                        <span class="status-badge status-active" id="detail-category"></span>
+                        <span class="status-badge" style="background: rgba(52, 152, 219, 0.12); color: var(--secondary);">Просмотры: <span id="detail-views">0</span></span>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title">Основная информация</h2>
+                        <div class="settings-options">
+                            <div class="setting-option" style="width:100%;">
+                                <div class="option-info">
+                                    <div class="option-title">Название кружка</div>
+                                    <div class="option-desc">Общее для всех групп</div>
+                                </div>
+                                <input id="input-title" type="text" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:260px;">
+                            </div>
+                            <div class="setting-option" style="width:100%;">
+                                <div class="option-info">
+                                    <div class="option-title">Категория</div>
+                                    <div class="option-desc">Например: Наука и технологии</div>
+                                </div>
+                                <input id="input-category" type="text" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:260px;">
+                            </div>
+                            <div class="setting-option" style="width:100%;align-items:flex-start;">
+                                <div class="option-info">
+                                    <div class="option-title">Описание</div>
+                                    <div class="option-desc">Коротко опишите кружок</div>
+                                </div>
+                                <textarea id="input-description" rows="3" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);width:100%;resize:vertical;"></textarea>
+                            </div>
+                            <div class="setting-option" style="width:100%;">
+                                <div class="option-info">
+                                    <div class="option-title">Цена в месяц (₽)</div>
+                                    <div class="option-desc">Одинакова для всех групп</div>
+                                </div>
+                                <input id="input-price" type="number" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:160px;">
+                            </div>
+                            <div class="setting-option" style="width:100%;">
+                                <div class="option-info">
+                                    <div class="option-title">Групп</div>
+                                    <div class="option-desc">Количество активных групп</div>
+                                </div>
+                                <input id="input-groups" type="number" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:120px;">
+                            </div>
+                            <div class="setting-option" style="width:100%;">
+                                <div class="option-info">
+                                    <div class="option-title">Вместимость на группу</div>
+                                    <div class="option-desc">Максимум мест, одинаково для всех групп</div>
+                                </div>
+                                <input id="input-capacity" type="number" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:160px;">
+                            </div>
+                            <div class="setting-option" style="width:100%;">
+                                <div class="option-info">
+                                    <div class="option-title">Возраст группы</div>
+                                    <div class="option-desc">Например: 6-8; 9-12</div>
+                                </div>
+                                <input id="input-age-groups" type="text" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:160px;" placeholder="6-8">
+                            </div>
                         </div>
-                        <div class="course-body">
-                            <div class="course-stats">
-                                <div class="course-stat">
-                                    <div class="stat-number">24</div>
-                                    <div class="stat-label">Ученика</div>
-                                </div>
-                                <div class="course-stat">
-                                    <div class="stat-number">4</div>
-                                    <div class="stat-label">Группы</div>
-                                </div>
-                                <div class="course-stat">
-                                    <div class="stat-number">92%</div>
-                                    <div class="stat-label">Заполняемость</div>
-                                </div>
-                            </div>
-                            <div class="course-actions">
-                                <button class="action-btn secondary">Редактировать</button>
-                                <button class="action-btn primary">Управление</button>
-                            </div>
+                        <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap;">
+                            <button class="action-btn primary" id="save-course">Сохранить изменения</button>
+                            <button class="action-btn secondary" id="delete-course">Удалить кружок</button>
+                            <button class="action-btn secondary" id="delete-group">Удалить группу</button>
                         </div>
                     </div>
-                    
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-title">Рисование</div>
-                            <div class="course-category">Творчество</div>
-                        </div>
-                        <div class="course-body">
-                            <div class="course-stats">
-                                <div class="course-stat">
-                                    <div class="stat-number">18</div>
-                                    <div class="stat-label">Ученика</div>
-                                </div>
-                                <div class="course-stat">
-                                    <div class="stat-number">3</div>
-                                    <div class="stat-label">Группы</div>
-                                </div>
-                                <div class="course-stat">
-                                    <div class="stat-number">85%</div>
-                                    <div class="stat-label">Заполняемость</div>
-                                </div>
-                            </div>
-                            <div class="course-actions">
-                                <button class="action-btn secondary">Редактировать</button>
-                                <button class="action-btn primary">Управление</button>
-                            </div>
-                        </div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title">Отзывы</h2>
+                        <div id="reviews-list" style="display:flex;flex-direction:column;gap:12px;"></div>
                     </div>
-                    
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-title">Футбол</div>
-                            <div class="course-category">Спорт</div>
-                        </div>
-                        <div class="course-body">
-                            <div class="course-stats">
-                                <div class="course-stat">
-                                    <div class="stat-number">32</div>
-                                    <div class="stat-label">Ученика</div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title">Расписание кружка</h2>
+                        <div class="settings-options">
+                            <div class="setting-option" style="width:100%;align-items:flex-start;">
+                                <div class="option-info">
+                                    <div class="option-title">Добавить занятие</div>
+                                    <div class="option-desc">Выберите день недели и время</div>
                                 </div>
-                                <div class="course-stat">
-                                    <div class="stat-number">5</div>
-                                    <div class="stat-label">Группы</div>
+                                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                                    <select id="sched-day" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;">
+                                        <option value="0">Понедельник</option>
+                                        <option value="1">Вторник</option>
+                                        <option value="2">Среда</option>
+                                        <option value="3">Четверг</option>
+                                        <option value="4">Пятница</option>
+                                        <option value="5">Суббота</option>
+                                        <option value="6">Воскресенье</option>
+                                    </select>
+                                    <input id="sched-time" type="time" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;">
+                                    <button class="action-btn primary" id="add-slot">Добавить</button>
                                 </div>
-                                <div class="course-stat">
-                                    <div class="stat-number">78%</div>
-                                    <div class="stat-label">Заполняемость</div>
-                                </div>
-                            </div>
-                            <div class="course-actions">
-                                <button class="action-btn secondary">Редактировать</button>
-                                <button class="action-btn primary">Управление</button>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-title">Программирование</div>
-                            <div class="course-category">Наука и технологии</div>
-                        </div>
-                        <div class="course-body">
-                            <div class="course-stats">
-                                <div class="course-stat">
-                                    <div class="stat-number">15</div>
-                                    <div class="stat-label">Ученика</div>
-                                </div>
-                                <div class="course-stat">
-                                    <div class="stat-number">2</div>
-                                    <div class="stat-label">Группы</div>
-                                </div>
-                                <div class="course-stat">
-                                    <div class="stat-number">65%</div>
-                                    <div class="stat-label">Заполняемость</div>
-                                </div>
-                            </div>
-                            <div class="course-actions">
-                                <button class="action-btn secondary">Редактировать</button>
-                                <button class="action-btn primary">Управление</button>
-                            </div>
+                        <div class="recent-activity" style="margin-top:15px;">
+                            <h2 class="section-title">Занятия</h2>
+                            <div id="course-slots" class="activity-list"></div>
                         </div>
                     </div>
                 </div>
@@ -1050,16 +1088,11 @@
                     <div class="schedule-header">
                         <h1 class="section-title">Расписание занятий</h1>
                         <div class="week-navigation">
-                            <div class="nav-btn">
-                                <i class="fas fa-chevron-left"></i>
-                            </div>
-                            <div>Неделя 15-21 мая</div>
-                            <div class="nav-btn">
-                                <i class="fas fa-chevron-right"></i>
-                            </div>
+                            <div class="nav-btn"><i class="fas fa-chevron-left"></i></div>
+                            <div id="week-label">Текущая неделя</div>
+                            <div class="nav-btn"><i class="fas fa-chevron-right"></i></div>
                         </div>
                     </div>
-                    
                     <div class="week-days">
                         <div class="day-header">Понедельник</div>
                         <div class="day-header">Вторник</div>
@@ -1069,56 +1102,16 @@
                         <div class="day-header">Суббота</div>
                         <div class="day-header">Воскресенье</div>
                     </div>
-                    
-                    <div class="day-slots">
-                        <div class="time-slot available">
-                            <div>10:00</div>
-                            <div>Робототехника</div>
-                            <div>Группа 1</div>
-                        </div>
-                        
-                        <div class="time-slot available">
-                            <div>11:00</div>
-                            <div>Рисование</div>
-                            <div>Группа 2</div>
-                        </div>
-                        
-                        <div class="time-slot booked">
-                            <div>12:00</div>
-                            <div>Футбол</div>
-                            <div>Группа 3</div>
-                        </div>
-                        
-                        <div class="time-slot available">
-                            <div>14:00</div>
-                            <div>Программирование</div>
-                            <div>Группа 1</div>
-                        </div>
-                        
-                        <div class="time-slot available">
-                            <div>15:00</div>
-                            <div>Робототехника</div>
-                            <div>Группа 2</div>
-                        </div>
-                        
-                        <div class="time-slot booked">
-                            <div>16:00</div>
-                            <div>Рисование</div>
-                            <div>Группа 1</div>
-                        </div>
-                        
-                        <div class="time-slot available">
-                            <div>17:00</div>
-                            <div>Футбол</div>
-                            <div>Группа 4</div>
-                        </div>
-                    </div>
+                    <div class="day-slots" id="global-day-slots"></div>
                 </div>
             </div>
             
             <!-- Клиенты -->
             <div class="screen" id="clients-screen">
-                <h1 class="section-title">Управление клиентами</h1>
+                <div class="section-title">
+                    <h1>Управление клиентами</h1>
+                    <button class="action-btn primary" id="open-clients-chat"><i class="fas fa-comments" style="margin-right:8px;"></i>Чат</button>
+                </div>
                 
                 <table class="clients-table">
                     <thead>
@@ -1187,67 +1180,202 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Чат с клиентами -->
+            <div class="screen" id="chat-screen">
+                <div class="section-title">
+                    <h1>Чат с клиентами</h1>
+                    <button class="action-btn secondary" id="back-to-clients"><i class="fas fa-arrow-left" style="margin-right:8px;"></i>К клиентам</button>
+                </div>
+                <div class="settings-container" style="display:flex;gap:20px;">
+                    <div style="width:280px;">
+                        <div class="settings-section" style="margin-bottom:15px;">
+                            <h2 class="settings-title">Список диалогов</h2>
+                            <div class="activity-list" id="chat-dialogs">
+                                <div class="activity-item" data-chat-id="ivanov">
+                                    <div class="activity-icon"><i class="fas fa-user"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Иванов Иван</div>
+                                        <div class="activity-desc">Последнее сообщение...</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item" data-chat-id="petrova">
+                                    <div class="activity-icon"><i class="fas fa-user"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Петрова Анна</div>
+                                        <div class="activity-desc">Последнее сообщение...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="flex:1;display:flex;flex-direction:column;">
+                        <div id="chat-thread" class="recent-activity" style="flex:1;display:flex;flex-direction:column;">
+                            <h2 class="section-title" style="margin-bottom:10px;">Диалог</h2>
+                            <div id="messages" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;"></div>
+                        </div>
+                        <div style="margin-top:10px;display:flex;gap:10px;">
+                            <input id="chat-input" type="text" placeholder="Напишите сообщение..." style="flex:1;padding:12px;border-radius:8px;border:1px solid var(--light-gray);">
+                            <button class="action-btn primary" id="send-message"><i class="fas fa-paper-plane" style="margin-right:6px;"></i>Отправить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Сотрудники -->
+            <div class="screen" id="employees-screen">
+                <h1 class="section-title">Сотрудники</h1>
+                <div class="settings-container">
+                    <p style="margin-bottom: 15px; color: var(--gray);">Здесь можно добавлять новых сотрудников компании.</p>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title">Добавить сотрудника</h2>
+                        <div class="settings-options">
+                            <div class="setting-option" style="width: 100%;">
+                                <div class="option-info">
+                                    <div class="option-title">Имя и должность</div>
+                                    <div class="option-desc">Введите имя, email и роль</div>
+                                </div>
+                                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                    <input type="text" placeholder="Имя" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:180px;">
+                                    <input type="email" placeholder="Email" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:220px;">
+                                    <input type="text" placeholder="Роль" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:160px;">
+                                    <button class="action-btn primary">Добавить сотрудника</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title">Список сотрудников</h2>
+                        <table class="clients-table">
+                            <thead>
+                                <tr>
+                                    <th>Имя</th>
+                                    <th>Email</th>
+                                    <th>Роль</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Иванов Иван</td>
+                                    <td>ivanov@example.com</td>
+                                    <td>Преподаватель</td>
+                                    <td>
+                                        <button class="action-btn secondary">Профиль</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Техподдержка -->
+            <div class="screen" id="support-screen">
+                <h1 class="section-title">Техподдержка</h1>
+                <div class="settings-container">
+                    <p style="margin-bottom: 15px; color: var(--gray);">Здесь можно написать нам по техническим проблемам или узнать по поводу услуг привлечения клиентов.</p>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title">Напишите нам</h2>
+                        <div class="settings-options">
+                            <div class="setting-option" style="width: 100%; align-items: flex-start;">
+                                <div class="option-info">
+                                    <div class="option-title">Тема и сообщение</div>
+                                    <div class="option-desc">Опишите вопрос максимально подробно</div>
+                                </div>
+                                <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
+                                    <input type="text" placeholder="Тема" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);">
+                                    <textarea placeholder="Сообщение" rows="4" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);resize:vertical;"></textarea>
+                                    <button class="action-btn primary">Отправить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title">Контакты</h2>
+                        <div class="setting-option" style="width: 100%;">
+                            <div class="option-info">
+                                <div class="option-title">Email</div>
+                                <div class="option-desc">support@kidcircle.pro</div>
+                            </div>
+                            <button class="action-btn secondary">Скопировать</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!-- Финансы -->
             <div class="screen" id="finance-screen">
-                <h1 class="section-title">Финансовый отчет</h1>
-                
-                <div class="finance-overview">
-                    <div class="finance-card">
-                        <div class="finance-value">₽248,560</div>
-                        <div class="finance-label">Доход за месяц</div>
-                    </div>
-                    
-                    <div class="finance-card">
-                        <div class="finance-value">₽187,320</div>
-                        <div class="finance-label">Доход за прошлый месяц</div>
-                    </div>
-                    
-                    <div class="finance-card">
-                        <div class="finance-value">₽61,240</div>
-                        <div class="finance-label">Разница</div>
-                    </div>
-                    
-                    <div class="finance-card">
-                        <div class="finance-value">+32.7%</div>
-                        <div class="finance-label">Рост</div>
+                <div class="section-title">
+                    <h1>Финансы</h1>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <select id="fin-period" style="padding:8px 10px;border:1px solid var(--light-gray);border-radius:8px;">
+                            <option value="month">Этот месяц</option>
+                            <option value="last_month">Прошлый месяц</option>
+                            <option value="quarter">Квартал</option>
+                            <option value="year">Год</option>
+                        </select>
+                        <select id="fin-type" style="padding:8px 10px;border:1px solid var(--light-gray);border-radius:8px;">
+                            <option value="all">Все операции</option>
+                            <option value="income">Только доходы</option>
+                            <option value="expense">Только расходы</option>
+                        </select>
                     </div>
                 </div>
-                
-                <div class="transactions-list">
-                    <h2 class="section-title">Последние транзакции</h2>
-                    
-                    <div class="transaction-item">
-                        <div class="transaction-info">
-                            <div class="transaction-title">Абонемент на месяц - Иванов Иван</div>
-                            <div class="transaction-date">15 мая 2023</div>
-                        </div>
-                        <div class="transaction-amount amount-positive">₽5,000</div>
+
+                <div class="finance-overview">
+                    <div class="finance-card">
+                        <div class="finance-value" id="kpi-income">₽0</div>
+                        <div class="finance-label">Доход</div>
                     </div>
                     
-                    <div class="transaction-item">
-                        <div class="transaction-info">
-                            <div class="transaction-title">Абонемент на месяц - Петрова Анна</div>
-                            <div class="transaction-date">14 мая 2023</div>
-                        </div>
-                        <div class="transaction-amount amount-positive">₽4,500</div>
+                    <div class="finance-card">
+                        <div class="finance-value" id="kpi-expense">₽0</div>
+                        <div class="finance-label">Расход</div>
                     </div>
                     
-                    <div class="transaction-item">
-                        <div class="transaction-info">
-                            <div class="transaction-title">Оплата аренды помещения</div>
-                            <div class="transaction-date">10 мая 2023</div>
-                        </div>
-                        <div class="transaction-amount amount-negative">-₽50,000</div>
+                    <div class="finance-card">
+                        <div class="finance-value" id="kpi-net">₽0</div>
+                        <div class="finance-label">Чистая прибыль</div>
                     </div>
                     
-                    <div class="transaction-item">
-                        <div class="transaction-info">
-                            <div class="transaction-title">Закупка материалов</div>
-                            <div class="transaction-date">5 мая 2023</div>
-                        </div>
-                        <div class="transaction-amount amount-negative">-₽15,000</div>
+                    <div class="finance-card">
+                        <div class="finance-value" id="kpi-avg">₽0</div>
+                        <div class="finance-label">Средний чек</div>
                     </div>
+                </div>
+
+                <div class="settings-container" style="margin-top:20px;">
+                    <div class="settings-section">
+                        <h2 class="settings-title">Добавить операцию</h2>
+                        <div class="settings-options">
+                            <div class="setting-option" style="width:100%;align-items:flex-start;">
+                                <div class="option-info">
+                                    <div class="option-title">Тип, сумма, описание</div>
+                                    <div class="option-desc">Введите данные операции</div>
+                                </div>
+                                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                                    <select id="op-type" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;">
+                                        <option value="income">Доход</option>
+                                        <option value="expense">Расход</option>
+                                    </select>
+                                    <input id="op-amount" type="number" placeholder="Сумма, ₽" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;min-width:120px;">
+                                    <input id="op-title" type="text" placeholder="Описание" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;min-width:240px;">
+                                    <input id="op-date" type="date" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;">
+                                    <button class="action-btn primary" id="add-operation">Добавить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transactions-list" style="margin-top:20px;">
+                    <h2 class="section-title">Операции</h2>
+                    <div id="transactions"></div>
                 </div>
             </div>
             
@@ -1419,18 +1547,25 @@
             const actionButtons = document.querySelectorAll('.action-btn');
             actionButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    if (this.textContent === 'Добавить кружок') {
+                    if (this.id === 'add-course-btn') {
                         alert('Функция добавления нового кружка');
                     } else if (this.textContent === 'Редактировать') {
                         alert('Редактирование кружка');
                     } else if (this.textContent === 'Управление') {
-                        alert('Управление кружком');
+                        // заглушка, обработчик ниже для manage-course-btn
                     } else if (this.textContent === 'Профиль') {
                         alert('Просмотр профиля клиента');
                     } else if (this.textContent === 'Изменить') {
                         alert('Изменение настройки');
                     } else if (this.textContent === 'Настроить') {
                         alert('Настройка интеграции');
+                    } else if (this.textContent === 'Добавить сотрудника') {
+                        alert('Добавление нового сотрудника');
+                    } else if (this.textContent === 'Отправить') {
+                        alert('Сообщение отправлено в техподдержку');
+                    } else if (this.textContent === 'Скопировать') {
+                        navigator.clipboard.writeText('support@kidcircle.pro');
+                        alert('Email скопирован: support@kidcircle.pro');
                     }
                 });
             });
@@ -1450,6 +1585,483 @@
                     alert('Информация о занятии: ' + this.querySelector('div:nth-child(2)').textContent);
                 });
             });
+
+            // Данные кружков (простая модель в памяти)
+            const coursesData = {
+                robotics: {
+                    id: 'robotics', title: 'Робототехника', category: 'Наука и технологии', description: 'Кружок по робототехнике для детей.', views: 0, reviews: [ { id: 'r1', author: 'Анна', text: 'Очень нравится преподаватель!', replies: [] } ],
+                    groups: [
+                        { id: 'robotics-g1', name: 'Группа 1', age: '7-9', students: 12, capacity: 14, price: 5000, schedule: [] },
+                        { id: 'robotics-g2', name: 'Группа 2', age: '10-12', students: 12, capacity: 14, price: 5000, schedule: [] }
+                    ]
+                }
+            };
+
+            const courseDetailScreen = document.getElementById('course-detail-screen');
+            const coursesScreen = document.getElementById('courses-screen');
+
+            let currentCourseId = null;
+            let currentGroupId = null;
+            function openCourseDetail(courseId, groupId) {
+                const course = coursesData[courseId];
+                if (!course) return;
+                currentCourseId = courseId;
+                const group = (course.groups || []).find(g => g.id === groupId) || (course.groups || [])[0];
+                currentGroupId = group ? group.id : null;
+
+                // увеличить счетчик просмотров
+                course.views += 1;
+
+                // заполнить данные
+                document.getElementById('detail-title').textContent = `${course.title} — ${group ? group.name : ''}`;
+                document.getElementById('detail-category').textContent = `${course.category}${group && group.age ? ' • Возраст: ' + group.age : ''}`;
+                document.getElementById('detail-views').textContent = String(course.views);
+
+                document.getElementById('input-title').value = course.title;
+                document.getElementById('input-category').value = course.category;
+                document.getElementById('input-description').value = course.description || '';
+                document.getElementById('input-price').value = group ? group.price : 0;
+                document.getElementById('input-groups').value = (course.groups || []).length;
+                document.getElementById('input-capacity').value = group ? group.capacity : 12;
+                document.getElementById('input-age-groups').value = group ? group.age || '' : '';
+
+                renderReviews(course);
+                renderCourseScheduleGroup(course, group);
+
+                // переключить экран
+                screens.forEach(screen => screen.classList.remove('active'));
+                courseDetailScreen.classList.add('active');
+            }
+
+            function renderReviews(course) {
+                const container = document.getElementById('reviews-list');
+                container.innerHTML = '';
+                if (!course.reviews.length) {
+                    const empty = document.createElement('div');
+                    empty.style.color = 'var(--gray)';
+                    empty.textContent = 'Пока нет отзывов.';
+                    container.appendChild(empty);
+                    return;
+                }
+                course.reviews.forEach((rev, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'activity-item';
+                    item.style.background = 'var(--light)';
+                    item.innerHTML = `
+                        <div class="activity-content" style="flex:1;">
+                            <div class="activity-title" style="margin-bottom:6px;">${rev.author}</div>
+                            <div class="activity-desc" style="color:var(--dark);">${rev.text}</div>
+                            <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
+                                <input type="text" placeholder="Ответить..." data-reply-input="${idx}" style="padding:8px;border-radius:8px;border:1px solid var(--light-gray);flex:1;">
+                                <button class="action-btn secondary" data-reply-btn="${idx}">Ответить</button>
+                            </div>
+                            <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+                                ${(rev.replies||[]).map(r => `<div style=\"font-size:0.9rem;color:var(--gray);\">↳ ${r}</div>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+
+                // навесить обработчики ответов
+                container.querySelectorAll('[data-reply-btn]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const idx = btn.getAttribute('data-reply-btn');
+                        const input = container.querySelector(`[data-reply-input="${idx}"]`);
+                        const text = (input && input.value || '').trim();
+                        if (!text) return;
+                        course.reviews[idx].replies = course.reviews[idx].replies || [];
+                        course.reviews[idx].replies.push(text);
+                        renderReviews(course);
+                    });
+                });
+            }
+
+            // обработчики кнопок Управление на карточках
+            // динамический рендер карточек групп
+            const coursesGrid = document.getElementById('courses-grid');
+            function renderCourseGroupCards() {
+                coursesGrid.innerHTML = '';
+                Object.values(coursesData).forEach(course => {
+                    (course.groups || []).forEach(group => {
+                        const card = document.createElement('div');
+                        card.className = 'course-card';
+                        card.innerHTML = `
+                            <div class="course-header">
+                                <div class="course-title">${course.title}</div>
+                                <div class="course-category">${group.name}${group.age ? ' • Возраст: ' + group.age : ''}</div>
+                            </div>
+                            <div class="course-body">
+                                <div class="course-stats">
+                                    <div class="course-stat">
+                                        <div class="stat-number">${group.students}</div>
+                                        <div class="stat-label">Ученика</div>
+                                    </div>
+                                    <div class="course-stat">
+                                        <div class="stat-number">${group.capacity}</div>
+                                        <div class="stat-label">Мест</div>
+                                    </div>
+                                    <div class="course-stat">
+                                        <div class="stat-number">${Math.round((group.students / Math.max(group.capacity,1)) * 100)}%</div>
+                                        <div class="stat-label">Заполняемость</div>
+                                    </div>
+                                </div>
+                                <div class="course-actions">
+                                    <button class="action-btn primary manage-course-btn" data-course-id="${course.id}" data-group-id="${group.id}">Управление</button>
+                                </div>
+                            </div>
+                        `;
+                        coursesGrid.appendChild(card);
+                    });
+                });
+                // навесить обработчики после рендера
+                coursesGrid.querySelectorAll('.manage-course-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const courseId = this.getAttribute('data-course-id');
+                        const groupId = this.getAttribute('data-group-id');
+                        openCourseDetail(courseId, groupId);
+                    });
+                });
+            }
+            renderCourseGroupCards();
+
+            // --- Чат с клиентами ---
+            const chatData = {
+                ivanov: [
+                    { from: 'client', text: 'Здравствуйте! Можно перенос занятия?' },
+                    { from: 'org', text: 'Здравствуйте! Да, конечно, на какое время удобно?' }
+                ],
+                petrova: [
+                    { from: 'client', text: 'Когда ближайшее занятие по рисованию?' }
+                ]
+            };
+
+            const chatScreen = document.getElementById('chat-screen');
+            const clientsScreen = document.getElementById('clients-screen');
+            let currentChatId = 'ivanov';
+
+            function renderMessages(chatId) {
+                const msgs = chatData[chatId] || [];
+                const box = document.getElementById('messages');
+                box.innerHTML = '';
+                msgs.forEach(m => {
+                    const row = document.createElement('div');
+                    row.style.alignSelf = m.from === 'org' ? 'flex-end' : 'flex-start';
+                    row.style.maxWidth = '70%';
+                    row.style.padding = '10px 12px';
+                    row.style.borderRadius = '12px';
+                    row.style.background = m.from === 'org' ? 'var(--secondary)' : 'var(--light)';
+                    row.style.color = m.from === 'org' ? '#fff' : 'var(--dark)';
+                    row.textContent = m.text;
+                    box.appendChild(row);
+                });
+                box.scrollTop = box.scrollHeight;
+            }
+
+            document.getElementById('open-clients-chat').addEventListener('click', function() {
+                screens.forEach(screen => screen.classList.remove('active'));
+                chatScreen.classList.add('active');
+                renderMessages(currentChatId);
+            });
+
+            document.getElementById('back-to-clients').addEventListener('click', function() {
+                screens.forEach(screen => screen.classList.remove('active'));
+                clientsScreen.classList.add('active');
+            });
+
+            document.getElementById('chat-dialogs').addEventListener('click', function(e) {
+                const item = e.target.closest('[data-chat-id]');
+                if (!item) return;
+                currentChatId = item.getAttribute('data-chat-id');
+                renderMessages(currentChatId);
+            });
+
+            document.getElementById('send-message').addEventListener('click', function() {
+                const input = document.getElementById('chat-input');
+                const text = (input.value || '').trim();
+                if (!text) return;
+                chatData[currentChatId] = chatData[currentChatId] || [];
+                chatData[currentChatId].push({ from: 'org', text });
+                input.value = '';
+                renderMessages(currentChatId);
+            });
+
+            // Создание нового кружка
+            document.getElementById('add-course-btn').addEventListener('click', function() {
+                // новый курс с одной дефолтной группой; число групп настраивается в "Основной информации"
+                const newCourseId = 'course_' + Math.random().toString(36).slice(2, 8);
+                const firstGroupId = `${newCourseId}_g1`;
+                coursesData[newCourseId] = {
+                    id: newCourseId,
+                    title: 'Новый кружок',
+                    category: '',
+                    description: '',
+                    views: 0,
+                    reviews: [],
+                    groups: [ { id: firstGroupId, name: 'Группа 1', age: '', students: 0, capacity: 12, price: 0, schedule: [] } ]
+                };
+                renderCourseGroupCards();
+                openCourseDetail(newCourseId, firstGroupId);
+            });
+
+            // сохранить изменения
+            document.getElementById('save-course').addEventListener('click', function() {
+                const course = coursesData[currentCourseId];
+                if (!course) return;
+                const group = (course.groups || []).find(g => g.id === currentGroupId);
+                if (!group) return;
+
+                course.title = document.getElementById('input-title').value.trim() || course.title;
+                course.category = document.getElementById('input-category').value.trim() || course.category;
+                course.description = document.getElementById('input-description').value.trim();
+                const sharedPrice = Number(document.getElementById('input-price').value) || (group.price || 0);
+                const sharedCapacity = Number(document.getElementById('input-capacity').value) || (group.capacity || 12);
+                const currentAge = (document.getElementById('input-age-groups').value || '').trim();
+                (course.groups || []).forEach((g, idx) => {
+                    g.price = sharedPrice;
+                    g.capacity = sharedCapacity;
+                    g.name = `Группа ${idx + 1}`;
+                    if (currentAge) {
+                        g.age = currentAge;
+                    }
+                });
+                // обновление количества групп согласно полю ввода
+                const desiredGroupsCount = Math.max(1, Number(document.getElementById('input-groups').value) || (course.groups || []).length);
+                const currentCount = (course.groups || []).length;
+                if (desiredGroupsCount > currentCount) {
+                    for (let i = currentCount + 1; i <= desiredGroupsCount; i++) {
+                        course.groups.push({ id: `${course.id}_g${i}`, name: `Группа ${i}`, age: '', students: 0, capacity: 12, price: group.price || 0, schedule: [] });
+                    }
+                } else if (desiredGroupsCount < currentCount) {
+                    // если удаляем текущую группу, переключимся на ближайшую оставшуюся
+                    const removedIndices = [];
+                    while (course.groups.length > desiredGroupsCount) {
+                        const removed = course.groups.pop();
+                        removedIndices.push(removed && removed.id);
+                    }
+                    if (removedIndices.includes(currentGroupId)) {
+                        currentGroupId = (course.groups[course.groups.length - 1] || {}).id || null;
+                    }
+                }
+                // повторно применим общие поля ко всем группам (чтобы новые группы тоже получили значения)
+                const ageAll = (document.getElementById('input-age-groups').value || '').trim();
+                (course.groups || []).forEach((g, idx) => {
+                    g.price = sharedPrice;
+                    g.capacity = sharedCapacity;
+                    g.name = `Группа ${idx + 1}`;
+                    if (ageAll) {
+                        g.age = ageAll;
+                    }
+                });
+                // кол-во учеников в текущей группе
+                // число учеников вводится не здесь; оставляем текущее значение
+
+                // обновить заголовок
+                document.getElementById('detail-title').textContent = `${course.title} — ${group.name}`;
+                document.getElementById('detail-category').textContent = `${course.category}${group && group.age ? ' • Возраст: ' + group.age : ''}`;
+                renderCourseGroupCards();
+                renderGlobalSchedule();
+                alert('Изменения сохранены');
+                // если текущая группа удалилась выше — перерисуем детали для новой текущей
+                if (currentGroupId && (!course.groups.find(g => g.id === currentGroupId))) {
+                    const fallbackId = (course.groups[0] || {}).id;
+                    if (fallbackId) openCourseDetail(course.id, fallbackId);
+                }
+            });
+
+            // удалить кружок
+            document.getElementById('delete-course').addEventListener('click', function() {
+                if (!currentCourseId) return;
+                const title = document.getElementById('detail-title').textContent || '';
+                if (!confirm(`Удалить кружок "${title}"?`)) return;
+                delete coursesData[currentCourseId];
+                renderCourseGroupCards();
+                screens.forEach(screen => screen.classList.remove('active'));
+                coursesScreen.classList.add('active');
+                alert('Кружок удален');
+            });
+
+            // удалить группу
+            document.getElementById('delete-group').addEventListener('click', function() {
+                const course = coursesData[currentCourseId];
+                if (!course || !currentGroupId) return;
+                const group = (course.groups || []).find(g => g.id === currentGroupId);
+                const label = `${course.title} — ${group ? group.name : ''}`;
+                if (!confirm(`Удалить группу "${label}"?`)) return;
+                course.groups = (course.groups || []).filter(g => g.id !== currentGroupId);
+                renderCourseGroupCards();
+                renderGlobalSchedule();
+                if (course.groups.length > 0) {
+                    openCourseDetail(course.id, course.groups[0].id);
+                } else {
+                    screens.forEach(screen => screen.classList.remove('active'));
+                    coursesScreen.classList.add('active');
+                }
+                alert('Группа удалена');
+            });
+
+            // назад к списку кружков
+            document.getElementById('back-to-courses').addEventListener('click', function() {
+                screens.forEach(screen => screen.classList.remove('active'));
+                coursesScreen.classList.add('active');
+            });
+
+            // Добавление отзывов отключено по требованию
+
+            // ------- Редактор расписания кружка -------
+            function renderCourseScheduleGroup(course, group) {
+                const list = document.getElementById('course-slots');
+                if (!list) return;
+                list.innerHTML = '';
+                ((group && group.schedule) || []).forEach((slot, idx) => {
+                    const row = document.createElement('div');
+                    row.className = 'activity-item';
+                    row.innerHTML = `
+                        <div class="activity-content">
+                            <div class="activity-title">${dayName(slot.day)}, ${slot.time}</div>
+                            <div class="activity-desc"></div>
+                        </div>
+                        <button class="action-btn secondary" data-remove-slot="${idx}">Удалить</button>
+                    `;
+                    list.appendChild(row);
+                });
+                list.querySelectorAll('[data-remove-slot]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const idx = Number(btn.getAttribute('data-remove-slot'));
+                        group.schedule.splice(idx, 1);
+                        renderCourseScheduleGroup(course, group);
+                        renderGlobalSchedule();
+                    });
+                });
+            }
+
+            function dayName(dayIdx) {
+                return ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'][dayIdx] || '';
+            }
+
+            document.getElementById('add-slot').addEventListener('click', function() {
+                const course = coursesData[currentCourseId];
+                if (!course) return;
+                const group = (course.groups || []).find(g => g.id === currentGroupId);
+                if (!group) return;
+                const day = Number(document.getElementById('sched-day').value);
+                const time = document.getElementById('sched-time').value;
+                if (!time) return;
+                group.schedule.push({ day, time });
+                renderCourseScheduleGroup(course, group);
+                renderGlobalSchedule();
+            });
+
+            // ------- Глобальное расписание -------
+            function renderGlobalSchedule() {
+                const container = document.getElementById('global-day-slots');
+                if (!container) return;
+                container.innerHTML = '';
+                for (let d = 0; d < 7; d++) {
+                    const col = document.createElement('div');
+                    col.style.display = 'flex';
+                    col.style.flexDirection = 'column';
+                    col.style.gap = '10px';
+                    const slots = [];
+                    Object.values(coursesData).forEach(course => {
+                        (course.groups || []).forEach(group => {
+                            (group.schedule || []).forEach(slot => {
+                                if (slot.day === d) slots.push({ course, group, slot });
+                            });
+                        });
+                    });
+                    slots.sort((a,b) => (a.slot.time > b.slot.time ? 1 : -1));
+                    if (!slots.length) {
+                        const empty = document.createElement('div');
+                        empty.className = 'time-slot available';
+                        empty.innerHTML = '<div>—</div><div>Нет занятий</div><div></div>';
+                        col.appendChild(empty);
+                    } else {
+                        slots.forEach(({course, group, slot}) => {
+                            const ts = document.createElement('div');
+                            ts.className = 'time-slot available';
+                            ts.innerHTML = `<div>${slot.time}</div><div>${course.title} • ${group.name}${group.age ? ' (' + group.age + ')' : ''}</div><div></div>`;
+                            col.appendChild(ts);
+                        });
+                    }
+                    container.appendChild(col);
+                }
+            }
+
+            // первый рендер
+            renderGlobalSchedule();
+
+            // ------- Финансы -------
+            const financeData = {
+                transactions: [
+                    { type: 'income', title: 'Абонемент - Иванов Иван', amount: 5000, date: '2025-05-15' },
+                    { type: 'income', title: 'Абонемент - Петрова Анна', amount: 4500, date: '2025-05-14' },
+                    { type: 'expense', title: 'Подписка KidsCircle Pro', amount: 50000, date: '2025-05-10' },
+                    { type: 'expense', title: 'Продвижение', amount: 15000, date: '2025-05-05' }
+                ]
+            };
+
+            function formatCurrency(num) {
+                const sign = num < 0 ? '-' : '';
+                const abs = Math.abs(Math.round(num));
+                return `₽${abs.toLocaleString('ru-RU')}`;
+            }
+
+            function renderFinance() {
+                const typeFilter = document.getElementById('fin-type').value;
+                const txContainer = document.getElementById('transactions');
+                txContainer.innerHTML = '';
+
+                let income = 0, expense = 0, count = 0;
+                financeData.transactions
+                    .filter(tx => typeFilter === 'all' || tx.type === typeFilter)
+                    .sort((a,b) => (a.date < b.date ? 1 : -1))
+                    .forEach(tx => {
+                        if (tx.type === 'income') { income += tx.amount; } else { expense += tx.amount; }
+                        count += 1;
+                        const row = document.createElement('div');
+                        row.className = 'transaction-item';
+                        row.innerHTML = `
+                            <div class="transaction-info">
+                                <div class="transaction-title">${tx.title}</div>
+                                <div class="transaction-date">${new Date(tx.date).toLocaleDateString('ru-RU')}</div>
+                            </div>
+                            <div class="transaction-amount ${tx.type === 'income' ? 'amount-positive' : 'amount-negative'}">${tx.type === 'income' ? '' : '-'}${formatCurrency(tx.amount)}</div>
+                        `;
+                        txContainer.appendChild(row);
+                    });
+
+                const net = income - expense;
+                const avg = count ? Math.round((income + expense) / count) : 0;
+                document.getElementById('kpi-income').textContent = formatCurrency(income);
+                document.getElementById('kpi-expense').textContent = formatCurrency(expense);
+                document.getElementById('kpi-net').textContent = formatCurrency(net);
+                document.getElementById('kpi-avg').textContent = formatCurrency(avg);
+            }
+
+            // обработчики формы добавления операции
+            const addOpBtn = document.getElementById('add-operation');
+            if (addOpBtn) {
+                addOpBtn.addEventListener('click', function() {
+                    const type = document.getElementById('op-type').value;
+                    const amount = Number(document.getElementById('op-amount').value);
+                    const title = (document.getElementById('op-title').value || '').trim();
+                    const date = document.getElementById('op-date').value || new Date().toISOString().slice(0,10);
+                    if (!amount || !title) return;
+                    financeData.transactions.push({ type, amount, title, date });
+                    document.getElementById('op-amount').value = '';
+                    document.getElementById('op-title').value = '';
+                    renderFinance();
+                });
+            }
+
+            const finType = document.getElementById('fin-type');
+            if (finType) finType.addEventListener('change', renderFinance);
+            const finPeriod = document.getElementById('fin-period');
+            if (finPeriod) finPeriod.addEventListener('change', renderFinance); // упрощенно, без реального периода
+
+            // первый рендер финансов
+            renderFinance();
         });
     </script>
 </body>
