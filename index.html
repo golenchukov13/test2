@@ -8,23 +8,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2c3e50;
-            --primary-dark: #1a2530;
-            --secondary: #3498db;
-            --accent: #2ecc71;
-            --warning: #e74c3c;
-            --light: #f7fafc;
-            --dark: #1f2430;
-            --gray: #8a93a6;
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --primary-light: #eef2ff;
+            --secondary: #7209b7;
+            --accent: #4cc9f0;
+            --success: #4ade80;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
             --light-gray: #e2e8f0;
-            --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            --neon: #00fff0;
-            --neon-2: #3498db;
-            --bg-gradient: linear-gradient(135deg, #f5f7ff 0%, #e5e9ff 100%);
-            --surface: rgba(255, 255, 255, 0.95);
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --surface: #ffffff;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --radius-lg: 16px;
             --sidebar-width: 280px;
-            --header-height: 80px;
+            --header-height: 70px;
         }
         
         * {
@@ -36,11 +40,12 @@
         
         html, body {
             height: 100%;
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 100%);
             color: var(--dark);
             line-height: 1.6;
             font-family: 'Nunito', sans-serif;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
         
         h1, h2, h3, h4, h5, h6 {
@@ -48,40 +53,47 @@
             font-weight: 700;
         }
         
-        /* Основная структура для десктопа */
+        /* Основная структура */
         .app-container {
             display: flex;
             min-height: 100vh;
         }
         
-        /* Левое меню */
+        /* Боковая панель */
         .sidebar {
             width: var(--sidebar-width);
-            background: var(--surface);
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
             display: flex;
             flex-direction: column;
             z-index: 100;
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
         }
         
         .logo-section {
             padding: 25px 20px;
-            border-bottom: 1px solid var(--light-gray);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             font-weight: 800;
             font-size: 1.4rem;
-            color: var(--primary);
+            color: white;
             text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .logo-icon {
-            color: var(--secondary);
-            font-size: 1.6rem;
+            background: rgba(255, 255, 255, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
         }
         
         .nav-section {
@@ -92,23 +104,38 @@
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 15px 25px;
+            padding: 16px 25px;
             text-decoration: none;
-            color: var(--dark);
+            color: rgba(255, 255, 255, 0.85);
             transition: var(--transition);
             cursor: pointer;
-            border-left: 4px solid transparent;
+            position: relative;
+            margin: 4px 10px;
+            border-radius: 10px;
         }
         
         .nav-item:hover {
-            background: rgba(44, 62, 80, 0.05);
-            color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
         }
         
         .nav-item.active {
-            background: rgba(44, 62, 80, 0.1);
-            color: var(--primary);
-            border-left-color: var(--primary);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: white;
+            border-radius: 0 4px 4px 0;
         }
         
         .nav-icon {
@@ -124,28 +151,30 @@
         
         .user-section {
             padding: 20px;
-            border-top: 1px solid var(--light-gray);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
             transition: var(--transition);
+            color: white;
         }
 
         .user-section:hover {
-            background: rgba(44, 62, 80, 0.05);
+            background: rgba(255, 255, 255, 0.05);
         }
         
         .user-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--primary);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
         
         .user-info {
@@ -159,7 +188,7 @@
         
         .user-city {
             font-size: 0.8rem;
-            color: var(--gray);
+            opacity: 0.8;
         }
         
         /* Основной контент */
@@ -168,29 +197,75 @@
             margin-left: var(--sidebar-width);
             padding: 30px;
             max-width: calc(100% - var(--sidebar-width));
+            transition: var(--transition);
         }
         
-        /* Дашборд для организаций */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .page-title i {
+            color: var(--primary);
+            background: var(--primary-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Дашборд */
         .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
+            gap: 24px;
             margin-bottom: 30px;
         }
         
         .stat-card {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             transition: var(--transition);
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+            opacity: 0.5;
         }
         
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
         
         .stat-value {
@@ -198,12 +273,14 @@
             font-weight: 800;
             margin-bottom: 10px;
             color: var(--primary);
+            z-index: 1;
         }
         
         .stat-title {
             font-size: 1rem;
             color: var(--gray);
             margin-bottom: 15px;
+            z-index: 1;
         }
         
         .stat-trend {
@@ -211,14 +288,15 @@
             align-items: center;
             font-size: 0.9rem;
             font-weight: 600;
+            z-index: 1;
         }
         
         .trend-up {
-            color: var(--accent);
+            color: var(--success);
         }
         
         .trend-down {
-            color: var(--warning);
+            color: var(--error);
         }
         
         /* Секция с графиками */
@@ -230,11 +308,16 @@
         }
         
         .chart-container {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             height: 350px;
+            transition: var(--transition);
+        }
+        
+        .chart-container:hover {
+            box-shadow: var(--shadow-lg);
         }
         
         .chart-title {
@@ -246,11 +329,16 @@
         
         /* Секция с последними записями */
         .recent-activity {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             margin-bottom: 30px;
+            transition: var(--transition);
+        }
+        
+        .recent-activity:hover {
+            box-shadow: var(--shadow-lg);
         }
         
         .activity-list {
@@ -263,25 +351,29 @@
             display: flex;
             align-items: center;
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 10px;
             background: var(--light);
             transition: var(--transition);
+            border-left: 3px solid transparent;
         }
         
         .activity-item:hover {
-            background: rgba(44, 62, 80, 0.05);
+            background: var(--primary-light);
+            border-left-color: var(--primary);
+            transform: translateX(5px);
         }
         
         .activity-icon {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--secondary);
+            background: var(--primary);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
+            font-size: 1.1rem;
         }
         
         .activity-content {
@@ -301,47 +393,70 @@
         .activity-time {
             font-size: 0.8rem;
             color: var(--gray);
+            white-space: nowrap;
         }
         
         /* Экран управления кружками */
         .courses-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 24px;
         }
         
         .course-card {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             transition: var(--transition);
+            display: flex;
+            flex-direction: column;
         }
         
         .course-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
         
         .course-header {
             padding: 20px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .course-header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
         }
         
         .course-title {
             font-size: 1.2rem;
             font-weight: 700;
             margin-bottom: 5px;
+            z-index: 1;
+            position: relative;
         }
         
         .course-category {
             font-size: 0.9rem;
             opacity: 0.9;
+            z-index: 1;
+            position: relative;
         }
         
         .course-body {
             padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
         .course-stats {
@@ -352,78 +467,97 @@
         
         .course-stat {
             text-align: center;
+            flex: 1;
         }
         
         .stat-number {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
+            line-height: 1.2;
         }
         
         .stat-label {
             font-size: 0.8rem;
             color: var(--gray);
+            margin-top: 5px;
         }
         
         .course-actions {
             display: flex;
             gap: 10px;
             align-items: center;
+            margin-top: auto;
         }
         
-        .action-btn {
-            flex: 0 0 auto;
-            padding: 10px;
+        .btn {
+            padding: 10px 16px;
             border: none;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-        }
-
-        /* Выровненные карточки групп */
-        .course-card .course-stats {
+            display: inline-flex;
             align-items: center;
-        }
-        .course-card .course-stat .stat-number {
-            line-height: 1.2;
-        }
-        .course-card .course-header {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
         }
         
-        .action-btn.primary {
-            background: var(--secondary);
+        .btn-primary {
+            background: var(--primary);
             color: white;
         }
         
-        .action-btn.secondary {
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
             background: var(--light);
             color: var(--dark);
-        }
-
-        /* Компактная кнопка добавления кружка */
-        .add-club-btn {
-            background: white;
-            color: var(--primary);
             border: 1px solid var(--light-gray);
-            padding: 8px 14px;
-            border-radius: 9999px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
         }
-        .add-club-btn:hover {
-            background: rgba(44, 62, 80, 0.03);
-            border-color: #d7dde8;
+        
+        .btn-secondary:hover {
+            background: var(--light-gray);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #22c55e;
+        }
+        
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 0.85rem;
         }
         
         /* Экран управления расписанием */
         .schedule-container {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .schedule-container:hover {
+            box-shadow: var(--shadow-lg);
         }
         
         .schedule-header {
@@ -449,10 +583,13 @@
             justify-content: center;
             cursor: pointer;
             transition: var(--transition);
+            border: 1px solid var(--light-gray);
         }
         
         .nav-btn:hover {
-            background: rgba(44, 62, 80, 0.1);
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
         }
         
         .week-days {
@@ -464,10 +601,11 @@
         
         .day-header {
             text-align: center;
-            padding: 10px;
-            background: var(--light);
+            padding: 12px;
+            background: var(--primary-light);
             border-radius: 8px;
             font-weight: 600;
+            color: var(--primary);
         }
         
         .day-slots {
@@ -483,30 +621,40 @@
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
+            border: 1px solid transparent;
         }
         
         .time-slot:hover {
-            background: rgba(44, 62, 80, 0.1);
+            background: var(--primary-light);
+            border-color: var(--primary);
+            transform: scale(1.05);
         }
         
         .time-slot.booked {
-            background: rgba(231, 76, 60, 0.1);
-            color: var(--warning);
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border-color: var(--error);
         }
         
         .time-slot.available {
-            background: rgba(46, 204, 113, 0.1);
+            background: rgba(76, 201, 240, 0.1);
             color: var(--accent);
+            border-color: var(--accent);
         }
         
         /* Экран управления клиентами */
         .clients-table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .clients-table:hover {
+            box-shadow: var(--shadow-lg);
         }
         
         .clients-table th, .clients-table td {
@@ -516,24 +664,30 @@
         }
         
         .clients-table th {
-            background: var(--light);
+            background: var(--primary-light);
             font-weight: 600;
+            color: var(--primary);
         }
         
         .clients-table tr:last-child td {
             border-bottom: none;
         }
         
+        .clients-table tr:hover td {
+            background: var(--light);
+        }
+        
         .client-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--secondary);
+            background: var(--primary);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 10px;
+            font-weight: 600;
         }
         
         .client-info {
@@ -541,43 +695,64 @@
             align-items: center;
         }
         
-        .status-badge {
+        .badge {
             padding: 5px 10px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
         
-        .status-active {
-            background: rgba(46, 204, 113, 0.1);
-            color: var(--accent);
+        .badge-success {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--success);
         }
         
-        .status-inactive {
-            background: rgba(231, 76, 60, 0.1);
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
             color: var(--warning);
+        }
+        
+        .badge-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--error);
+        }
+        
+        .badge-primary {
+            background: rgba(67, 97, 238, 0.15);
+            color: var(--primary);
         }
         
         /* Экран финансов */
         .finance-overview {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            gap: 24px;
             margin-bottom: 30px;
         }
         
         .finance-card {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             text-align: center;
+            transition: var(--transition);
+            border-top: 4px solid var(--primary);
+        }
+        
+        .finance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
         
         .finance-value {
             font-size: 2rem;
             font-weight: 800;
             margin-bottom: 10px;
+            color: var(--primary);
         }
         
         .finance-label {
@@ -586,10 +761,15 @@
         }
         
         .transactions-list {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .transactions-list:hover {
+            box-shadow: var(--shadow-lg);
         }
         
         .transaction-item {
@@ -597,6 +777,11 @@
             justify-content: space-between;
             padding: 15px;
             border-bottom: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+        
+        .transaction-item:hover {
+            background: var(--light);
         }
         
         .transaction-item:last-child {
@@ -623,11 +808,11 @@
         }
         
         .amount-positive {
-            color: var(--accent);
+            color: var(--success);
         }
         
         .amount-negative {
-            color: var(--warning);
+            color: var(--error);
         }
         
         /* Экран аналитики */
@@ -639,11 +824,16 @@
         }
         
         .analytics-card {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             height: 300px;
+            transition: var(--transition);
+        }
+        
+        .analytics-card:hover {
+            box-shadow: var(--shadow-lg);
         }
         
         .analytics-card.wide {
@@ -652,14 +842,27 @@
         
         /* Экран настроек */
         .settings-container {
-            background: white;
-            border-radius: 16px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
             padding: 25px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .settings-container:hover {
+            box-shadow: var(--shadow-lg);
         }
         
         .settings-section {
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .settings-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
         
         .settings-title {
@@ -667,6 +870,13 @@
             margin-bottom: 15px;
             color: var(--dark);
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .settings-title i {
+            color: var(--primary);
         }
         
         .settings-options {
@@ -681,7 +891,12 @@
             align-items: center;
             padding: 15px;
             background: var(--light);
-            border-radius: 12px;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+        
+        .setting-option:hover {
+            background: var(--primary-light);
         }
         
         .option-info {
@@ -737,11 +952,39 @@
         }
         
         input:checked + .slider {
-            background-color: var(--accent);
+            background-color: var(--success);
         }
         
         input:checked + .slider:before {
             transform: translateX(26px);
+        }
+        
+        /* Формы */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--light);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
         }
         
         /* Адаптивность */
@@ -755,15 +998,14 @@
             }
         }
         
-        @media (max-width: 768px) {
-            .app-container {
-                flex-direction: column;
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
             }
             
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
+            .sidebar.active {
+                transform: translateX(0);
             }
             
             .main-content {
@@ -771,48 +1013,165 @@
                 max-width: 100%;
             }
             
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 768px) {
             .dashboard-stats {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                grid-template-columns: 1fr;
             }
             
             .courses-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .week-days, .day-slots {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .main-content {
+                padding: 20px;
             }
         }
 
         /* Стили для экранов */
         .screen {
             display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .screen.active {
             display: block;
         }
         
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: var(--dark);
-            font-weight: 700;
-            display: flex;
+        /* Кнопка меню для мобильных */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
         }
         
-        .view-all {
-            font-size: 0.9rem;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: var(--success);
+        }
+        
+        .notification.error {
+            background: var(--error);
+        }
+        
+        .notification.info {
+            background: var(--primary);
+        }
+        
+        /* Доп. анимации и стили для техподдержки */
+        .pop-in { animation: popIn 0.4s ease; }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .choice-card { cursor: pointer; transition: var(--transition); }
+        .choice-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        
+        /* Полноэкранный выбор в техподдержке */
+        .support-choice-full {
+            min-height: calc(100vh - 140px);
+            display: flex;
+            align-items: center;
+        }
+        .support-choice-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            width: 100%;
+        }
+        @media (max-width: 992px) {
+            .support-choice-grid { grid-template-columns: 1fr; }
+        }
+        .choice-card-big {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 56vh;
+            min-height: 320px;
+            text-align: center;
+        }
+        .choice-card-big .settings-title { margin-bottom: 12px; }
+        .choice-card-big .settings-title i { font-size: 1.6rem; }
+        .choice-card-big .choice-desc { color: var(--gray); font-size: 1rem; }
     </style>
 </head>
 <body>
+    <div class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </div>
+    
     <div class="app-container">
         <!-- Левое меню -->
         <div class="sidebar">
             <div class="logo-section">
-                <i class="fas fa-chart-line logo-icon"></i>
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
                 <span>KIDCIRCLE PRO</span>
             </div>
             
@@ -870,7 +1229,18 @@
         <div class="main-content">
             <!-- Дашборд -->
             <div class="screen active" id="dashboard-screen">
-                <h1 class="section-title">Панель управления</h1>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Панель управления
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Создать отчет
+                        </button>
+                    </div>
+                </div>
                 
                 <div class="dashboard-stats">
                     <div class="stat-card">
@@ -923,7 +1293,10 @@
                 </div>
                 
                 <div class="recent-activity">
-                    <h2 class="section-title">Последняя активность</h2>
+                    <h2 class="settings-title">
+                        <i class="fas fa-history"></i>
+                        Последняя активность
+                    </h2>
                     
                     <div class="activity-list">
                         <div class="activity-item">
@@ -964,9 +1337,17 @@
             
             <!-- Управление кружками -->
             <div class="screen" id="courses-screen">
-                <div class="section-title">
-                    <h1>Кружки и секции</h1>
-                    <button class="action-btn add-club-btn" id="add-course-btn"><i class="fas fa-plus" style="margin-right:8px;"></i>Добавить кружок</button>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Кружки и секции
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="add-course-btn">
+                            <i class="fas fa-plus"></i>
+                            Добавить кружок
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="courses-grid" id="courses-grid"></div>
@@ -974,93 +1355,95 @@
 
             <!-- Детали кружка -->
             <div class="screen" id="course-detail-screen">
-                <div class="section-title">
-                    <h1>Карточка кружка</h1>
-                    <button class="action-btn secondary" id="back-to-courses"><i class="fas fa-arrow-left" style="margin-right:8px;"></i>К списку кружков</button>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Карточка кружка
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" id="back-to-courses">
+                            <i class="fas fa-arrow-left"></i>
+                            К списку кружков
+                        </button>
+                    </div>
                 </div>
 
                 <div class="settings-container" id="course-detail">
-                    <div style="display:flex;gap:20px;align-items:center;margin-bottom:20px;">
+                    <div style="display:flex;gap:20px;align-items:center;margin-bottom:20px;flex-wrap:wrap;">
                         <div class="course-title" id="detail-title" style="margin:0;font-size:1.4rem;font-weight:800;color:var(--primary);"></div>
-                        <span class="status-badge status-active" id="detail-category"></span>
-                        <span class="status-badge" style="background: rgba(52, 152, 219, 0.12); color: var(--secondary);">Просмотры: <span id="detail-views">0</span></span>
+                        <span class="badge badge-primary" id="detail-category"></span>
+                        <span class="badge badge-success">Просмотры: <span id="detail-views">0</span></span>
                     </div>
 
                     <div class="settings-section">
-                        <h2 class="settings-title">Основная информация</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-info-circle"></i>
+                            Основная информация
+                        </h2>
                         <div class="settings-options">
-                            <div class="setting-option" style="width:100%;">
-                                <div class="option-info">
-                                    <div class="option-title">Название кружка</div>
-                                    <div class="option-desc">Общее для всех групп</div>
-                                </div>
-                                <input id="input-title" type="text" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:260px;">
+                            <div class="form-group">
+                                <label class="form-label">Название кружка</label>
+                                <input id="input-title" type="text" class="form-control" placeholder="Общее для всех групп">
                             </div>
-                            <div class="setting-option" style="width:100%;">
-                                <div class="option-info">
-                                    <div class="option-title">Категория</div>
-                                    <div class="option-desc">Например: Наука и технологии</div>
-                                </div>
-                                <input id="input-category" type="text" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:260px;">
+                            <div class="form-group">
+                                <label class="form-label">Категория</label>
+                                <input id="input-category" type="text" class="form-control" placeholder="Например: Наука и технологии">
                             </div>
-                            <div class="setting-option" style="width:100%;align-items:flex-start;">
-                                <div class="option-info">
-                                    <div class="option-title">Описание</div>
-                                    <div class="option-desc">Коротко опишите кружок</div>
-                                </div>
-                                <textarea id="input-description" rows="3" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);width:100%;resize:vertical;"></textarea>
+                            <div class="form-group">
+                                <label class="form-label">Описание</label>
+                                <textarea id="input-description" rows="3" class="form-control" placeholder="Коротко опишите кружок"></textarea>
                             </div>
-                            <div class="setting-option" style="width:100%;">
-                                <div class="option-info">
-                                    <div class="option-title">Цена в месяц (₽)</div>
-                                    <div class="option-desc">Одинакова для всех групп</div>
-                                </div>
-                                <input id="input-price" type="number" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:160px;">
+                            <div class="form-group">
+                                <label class="form-label">Цена в месяц (₽)</label>
+                                <input id="input-price" type="number" class="form-control" placeholder="Одинакова для всех групп">
                             </div>
-                            <div class="setting-option" style="width:100%;">
-                                <div class="option-info">
-                                    <div class="option-title">Групп</div>
-                                    <div class="option-desc">Количество активных групп</div>
-                                </div>
-                                <input id="input-groups" type="number" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:120px;">
+                            <div class="form-group">
+                                <label class="form-label">Количество групп</label>
+                                <input id="input-groups" type="number" class="form-control" placeholder="Количество активных групп">
                             </div>
-                            <div class="setting-option" style="width:100%;">
-                                <div class="option-info">
-                                    <div class="option-title">Вместимость на группу</div>
-                                    <div class="option-desc">Максимум мест, одинаково для всех групп</div>
-                                </div>
-                                <input id="input-capacity" type="number" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:160px;">
+                            <div class="form-group">
+                                <label class="form-label">Вместимость на группу</label>
+                                <input id="input-capacity" type="number" class="form-control" placeholder="Максимум мест, одинаково для всех групп">
                             </div>
-                            <div class="setting-option" style="width:100%;">
-                                <div class="option-info">
-                                    <div class="option-title">Возраст группы</div>
-                                    <div class="option-desc">Например: 6-8; 9-12</div>
-                                </div>
-                                <input id="input-age-groups" type="text" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:160px;" placeholder="6-8">
+                            <div class="form-group">
+                                <label class="form-label">Возраст группы</label>
+                                <input id="input-age-groups" type="text" class="form-control" placeholder="Например: 6-8; 9-12">
                             </div>
                         </div>
                         <div style="margin-top:15px;display:flex;gap:10px;flex-wrap:wrap;">
-                            <button class="action-btn primary" id="save-course">Сохранить изменения</button>
-                            <button class="action-btn secondary" id="delete-course">Удалить кружок</button>
-                            <button class="action-btn secondary" id="delete-group">Удалить группу</button>
+                            <button class="btn btn-success" id="save-course">
+                                <i class="fas fa-save"></i>
+                                Сохранить изменения
+                            </button>
+                            <button class="btn btn-danger" id="delete-course">
+                                <i class="fas fa-trash"></i>
+                                Удалить кружок
+                            </button>
+                            <button class="btn btn-danger" id="delete-group">
+                                <i class="fas fa-minus-circle"></i>
+                                Удалить группу
+                            </button>
                         </div>
                     </div>
 
                     <div class="settings-section">
-                        <h2 class="settings-title">Отзывы</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-star"></i>
+                            Отзывы
+                        </h2>
                         <div id="reviews-list" style="display:flex;flex-direction:column;gap:12px;"></div>
                     </div>
 
                     <div class="settings-section">
-                        <h2 class="settings-title">Расписание кружка</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-clock"></i>
+                            Расписание кружка
+                        </h2>
                         <div class="settings-options">
-                            <div class="setting-option" style="width:100%;align-items:flex-start;">
-                                <div class="option-info">
-                                    <div class="option-title">Добавить занятие</div>
-                                    <div class="option-desc">Выберите день недели и время</div>
-                                </div>
+                            <div class="form-group" style="width:100%;">
+                                <label class="form-label">Добавить занятие</label>
                                 <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                                    <select id="sched-day" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;">
+                                    <select id="sched-day" class="form-control" style="width:auto;">
                                         <option value="0">Понедельник</option>
                                         <option value="1">Вторник</option>
                                         <option value="2">Среда</option>
@@ -1069,13 +1452,19 @@
                                         <option value="5">Суббота</option>
                                         <option value="6">Воскресенье</option>
                                     </select>
-                                    <input id="sched-time" type="time" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;">
-                                    <button class="action-btn primary" id="add-slot">Добавить</button>
+                                    <input id="sched-time" type="time" class="form-control" style="width:auto;">
+                                    <button class="btn btn-primary" id="add-slot">
+                                        <i class="fas fa-plus"></i>
+                                        Добавить
+                                    </button>
                                 </div>
                             </div>
                         </div>
                         <div class="recent-activity" style="margin-top:15px;">
-                            <h2 class="section-title">Занятия</h2>
+                            <h2 class="settings-title">
+                                <i class="fas fa-list"></i>
+                                Занятия
+                            </h2>
                             <div id="course-slots" class="activity-list"></div>
                         </div>
                     </div>
@@ -1084,15 +1473,21 @@
             
             <!-- Расписание -->
             <div class="screen" id="schedule-screen">
-                <div class="schedule-container">
-                    <div class="schedule-header">
-                        <h1 class="section-title">Расписание занятий</h1>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-calendar-alt"></i>
+                        Расписание занятий
+                    </h1>
+                    <div class="header-actions">
                         <div class="week-navigation">
                             <div class="nav-btn"><i class="fas fa-chevron-left"></i></div>
                             <div id="week-label">Текущая неделя</div>
                             <div class="nav-btn"><i class="fas fa-chevron-right"></i></div>
                         </div>
                     </div>
+                </div>
+                
+                <div class="schedule-container">
                     <div class="week-days">
                         <div class="day-header">Понедельник</div>
                         <div class="day-header">Вторник</div>
@@ -1108,9 +1503,17 @@
             
             <!-- Клиенты -->
             <div class="screen" id="clients-screen">
-                <div class="section-title">
-                    <h1>Управление клиентами</h1>
-                    <button class="action-btn primary" id="open-clients-chat"><i class="fas fa-comments" style="margin-right:8px;"></i>Чат</button>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-users"></i>
+                        Управление клиентами
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" id="open-clients-chat">
+                            <i class="fas fa-comments"></i>
+                            Чат с клиентами
+                        </button>
+                    </div>
                 </div>
                 
                 <table class="clients-table">
@@ -1136,9 +1539,9 @@
                             </td>
                             <td>+7 (123) 456-78-90</td>
                             <td>Робототехника, Программирование</td>
-                            <td><span class="status-badge status-active">Активен</span></td>
+                            <td><span class="badge badge-success">Активен</span></td>
                             <td>
-                                <button class="action-btn secondary">Профиль</button>
+                                <button class="btn btn-sm btn-secondary">Профиль</button>
                             </td>
                         </tr>
                         
@@ -1154,9 +1557,9 @@
                             </td>
                             <td>+7 (123) 456-78-91</td>
                             <td>Рисование</td>
-                            <td><span class="status-badge status-active">Активен</span></td>
+                            <td><span class="badge badge-success">Активен</span></td>
                             <td>
-                                <button class="action-btn secondary">Профиль</button>
+                                <button class="btn btn-sm btn-secondary">Профиль</button>
                             </td>
                         </tr>
                         
@@ -1172,9 +1575,9 @@
                             </td>
                             <td>+7 (123) 456-78-92</td>
                             <td>Футбол</td>
-                            <td><span class="status-badge status-inactive">Неактивен</span></td>
+                            <td><span class="badge badge-error">Неактивен</span></td>
                             <td>
-                                <button class="action-btn secondary">Профиль</button>
+                                <button class="btn btn-sm btn-secondary">Профиль</button>
                             </td>
                         </tr>
                     </tbody>
@@ -1183,14 +1586,26 @@
 
             <!-- Чат с клиентами -->
             <div class="screen" id="chat-screen">
-                <div class="section-title">
-                    <h1>Чат с клиентами</h1>
-                    <button class="action-btn secondary" id="back-to-clients"><i class="fas fa-arrow-left" style="margin-right:8px;"></i>К клиентам</button>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-comments"></i>
+                        Чат с клиентами
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" id="back-to-clients">
+                            <i class="fas fa-arrow-left"></i>
+                            К клиентам
+                        </button>
+                    </div>
                 </div>
-                <div class="settings-container" style="display:flex;gap:20px;">
+                
+                <div class="settings-container" style="display:flex;gap:20px;min-height:500px;">
                     <div style="width:280px;">
                         <div class="settings-section" style="margin-bottom:15px;">
-                            <h2 class="settings-title">Список диалогов</h2>
+                            <h2 class="settings-title">
+                                <i class="fas fa-list"></i>
+                                Список диалогов
+                            </h2>
                             <div class="activity-list" id="chat-dialogs">
                                 <div class="activity-item" data-chat-id="ivanov">
                                     <div class="activity-icon"><i class="fas fa-user"></i></div>
@@ -1211,12 +1626,18 @@
                     </div>
                     <div style="flex:1;display:flex;flex-direction:column;">
                         <div id="chat-thread" class="recent-activity" style="flex:1;display:flex;flex-direction:column;">
-                            <h2 class="section-title" style="margin-bottom:10px;">Диалог</h2>
-                            <div id="messages" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;"></div>
+                            <h2 class="settings-title" style="margin-bottom:10px;">
+                                <i class="fas fa-comment"></i>
+                                Диалог
+                            </h2>
+                            <div id="messages" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:10px;background:var(--light);border-radius:10px;"></div>
                         </div>
                         <div style="margin-top:10px;display:flex;gap:10px;">
-                            <input id="chat-input" type="text" placeholder="Напишите сообщение..." style="flex:1;padding:12px;border-radius:8px;border:1px solid var(--light-gray);">
-                            <button class="action-btn primary" id="send-message"><i class="fas fa-paper-plane" style="margin-right:6px;"></i>Отправить</button>
+                            <input id="chat-input" type="text" placeholder="Напишите сообщение..." class="form-control">
+                            <button class="btn btn-primary" id="send-message">
+                                <i class="fas fa-paper-plane"></i>
+                                Отправить
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1224,30 +1645,45 @@
 
             <!-- Сотрудники -->
             <div class="screen" id="employees-screen">
-                <h1 class="section-title">Сотрудники</h1>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-id-badge"></i>
+                        Сотрудники
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i>
+                            Добавить сотрудника
+                        </button>
+                    </div>
+                </div>
+                
                 <div class="settings-container">
                     <p style="margin-bottom: 15px; color: var(--gray);">Здесь можно добавлять новых сотрудников компании.</p>
 
                     <div class="settings-section">
-                        <h2 class="settings-title">Добавить сотрудника</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-user-plus"></i>
+                            Добавить сотрудника
+                        </h2>
                         <div class="settings-options">
-                            <div class="setting-option" style="width: 100%;">
-                                <div class="option-info">
-                                    <div class="option-title">Имя и должность</div>
-                                    <div class="option-desc">Введите имя, email и роль</div>
-                                </div>
+                            <div class="form-group" style="width:100%;">
+                                <label class="form-label">Данные сотрудника</label>
                                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                    <input type="text" placeholder="Имя" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:180px;">
-                                    <input type="email" placeholder="Email" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:220px;">
-                                    <input type="text" placeholder="Роль" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);min-width:160px;">
-                                    <button class="action-btn primary">Добавить сотрудника</button>
+                                    <input type="text" placeholder="Имя" class="form-control" style="width:180px;">
+                                    <input type="email" placeholder="Email" class="form-control" style="width:220px;">
+                                    <input type="text" placeholder="Роль" class="form-control" style="width:160px;">
+                                    <button class="btn btn-primary">Добавить сотрудника</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="settings-section">
-                        <h2 class="settings-title">Список сотрудников</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-list"></i>
+                            Список сотрудников
+                        </h2>
                         <table class="clients-table">
                             <thead>
                                 <tr>
@@ -1263,7 +1699,7 @@
                                     <td>ivanov@example.com</td>
                                     <td>Преподаватель</td>
                                     <td>
-                                        <button class="action-btn secondary">Профиль</button>
+                                        <button class="btn btn-sm btn-secondary">Профиль</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -1274,56 +1710,120 @@
 
             <!-- Техподдержка -->
             <div class="screen" id="support-screen">
-                <h1 class="section-title">Техподдержка</h1>
-                <div class="settings-container">
-                    <p style="margin-bottom: 15px; color: var(--gray);">Здесь можно написать нам по техническим проблемам или узнать по поводу услуг привлечения клиентов.</p>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-headset"></i>
+                        Техподдержка
+                    </h1>
+                </div>
 
+                <div class="settings-container pop-in support-choice-full" id="support-choice">
+                    <div class="support-choice-grid">
+                        <div class="recent-activity choice-card choice-card-big" id="open-support-marketing">
+                            <h2 class="settings-title">
+                                <i class="fas fa-bullhorn"></i>
+                                Поднять посещаемость
+                            </h2>
+                            <div class="choice-desc">Услуги, цены, консультация и чат по покупке</div>
+                        </div>
+
+                        <div class="recent-activity choice-card choice-card-big" id="open-support-tech">
+                            <h2 class="settings-title">
+                                <i class="fas fa-triangle-exclamation"></i>
+                                Сообщить о технической ошибке
+                            </h2>
+                            <div class="choice-desc">Сразу открывается чат с техподдержкой</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Подсекция: Услуги продвижения -->
+                <div class="settings-container screen pop-in" id="support-marketing" style="display:none;">
+                    <div class="page-header" style="margin-top:-10px;">
+                        <h1 class="page-title" style="font-size:1.4rem;">
+                            <i class="fas fa-bullhorn"></i>
+                            Услуги по привлечению клиентов
+                        </h1>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" id="back-to-support-choice-1"><i class="fas fa-arrow-left"></i> Назад</button>
+                        </div>
+                    </div>
                     <div class="settings-section">
-                        <h2 class="settings-title">Напишите нам</h2>
+                        <h2 class="settings-title"><i class="fas fa-list"></i> Пакеты и цены</h2>
                         <div class="settings-options">
-                            <div class="setting-option" style="width: 100%; align-items: flex-start;">
+                            <div class="setting-option">
                                 <div class="option-info">
-                                    <div class="option-title">Тема и сообщение</div>
-                                    <div class="option-desc">Опишите вопрос максимально подробно</div>
+                                    <div class="option-title">Старт</div>
+                                    <div class="option-desc">Запуск рекламы, базовый лендинг • от ₽25 000/мес</div>
                                 </div>
-                                <div style="display:flex;flex-direction:column;gap:10px;flex:1;">
-                                    <input type="text" placeholder="Тема" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);">
-                                    <textarea placeholder="Сообщение" rows="4" style="padding:10px;border-radius:8px;border:1px solid var(--light-gray);resize:vertical;"></textarea>
-                                    <button class="action-btn primary">Отправить</button>
+                                <button class="btn btn-primary chat-open-marketing">Написать в чат</button>
+                            </div>
+                            <div class="setting-option">
+                                <div class="option-info">
+                                    <div class="option-title">Рост</div>
+                                    <div class="option-desc">Мультиканальная реклама, аналитика • от ₽60 000/мес</div>
                                 </div>
+                                <button class="btn btn-primary chat-open-marketing">Написать в чат</button>
+                            </div>
+                            <div class="setting-option">
+                                <div class="option-info">
+                                    <div class="option-title">Максимум</div>
+                                    <div class="option-desc">Полный маркетинг под ключ • от ₽120 000/мес</div>
+                                </div>
+                                <button class="btn btn-primary chat-open-marketing">Написать в чат</button>
                             </div>
                         </div>
                     </div>
-
                     <div class="settings-section">
-                        <h2 class="settings-title">Контакты</h2>
-                        <div class="setting-option" style="width: 100%;">
-                            <div class="option-info">
-                                <div class="option-title">Email</div>
-                                <div class="option-desc">support@kidcircle.pro</div>
-                            </div>
-                            <button class="action-btn secondary">Скопировать</button>
+                        <h2 class="settings-title"><i class="fas fa-message"></i> Чат по покупке услуг</h2>
+                        <div style="display:flex;gap:12px;align-items:center;">
+                            <input id="marketing-chat-input" type="text" class="form-control" placeholder="Напишите вопрос..." style="flex:1;">
+                            <button class="btn btn-primary" id="marketing-chat-send"><i class="fas fa-paper-plane"></i> Отправить</button>
+                        </div>
+                        <div id="marketing-chat-box" class="recent-activity" style="margin-top:12px;max-height:260px;overflow:auto;"></div>
+                    </div>
+                </div>
+
+                <!-- Подсекция: Техническая поддержка (чат) -->
+                <div class="settings-container screen pop-in" id="support-tech" style="display:none;">
+                    <div class="page-header" style="margin-top:-10px;">
+                        <h1 class="page-title" style="font-size:1.4rem;">
+                            <i class="fas fa-wrench"></i>
+                            Чат техподдержки
+                        </h1>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" id="back-to-support-choice-2"><i class="fas fa-arrow-left"></i> Назад</button>
                         </div>
                     </div>
+                    <div style="display:flex;gap:12px;align-items:center;">
+                        <input id="tech-chat-input" type="text" class="form-control" placeholder="Опишите проблему..." style="flex:1;">
+                        <button class="btn btn-primary" id="tech-chat-send"><i class="fas fa-paper-plane"></i> Отправить</button>
+                    </div>
+                    <div id="tech-chat-box" class="recent-activity" style="margin-top:12px;max-height:320px;overflow:auto;"></div>
                 </div>
             </div>
             
             <!-- Финансы -->
             <div class="screen" id="finance-screen">
-                <div class="section-title">
-                    <h1>Финансы</h1>
-                    <div style="display:flex;gap:10px;align-items:center;">
-                        <select id="fin-period" style="padding:8px 10px;border:1px solid var(--light-gray);border-radius:8px;">
-                            <option value="month">Этот месяц</option>
-                            <option value="last_month">Прошлый месяц</option>
-                            <option value="quarter">Квартал</option>
-                            <option value="year">Год</option>
-                        </select>
-                        <select id="fin-type" style="padding:8px 10px;border:1px solid var(--light-gray);border-radius:8px;">
-                            <option value="all">Все операции</option>
-                            <option value="income">Только доходы</option>
-                            <option value="expense">Только расходы</option>
-                        </select>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-credit-card"></i>
+                        Финансы
+                    </h1>
+                    <div class="header-actions">
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <select id="fin-period" class="form-control" style="width:auto;">
+                                <option value="month">Этот месяц</option>
+                                <option value="last_month">Прошлый месяц</option>
+                                <option value="quarter">Квартал</option>
+                                <option value="year">Год</option>
+                            </select>
+                            <select id="fin-type" class="form-control" style="width:auto;">
+                                <option value="all">Все операции</option>
+                                <option value="income">Только доходы</option>
+                                <option value="expense">Только расходы</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
@@ -1351,22 +1851,22 @@
 
                 <div class="settings-container" style="margin-top:20px;">
                     <div class="settings-section">
-                        <h2 class="settings-title">Добавить операцию</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-plus-circle"></i>
+                            Добавить операцию
+                        </h2>
                         <div class="settings-options">
-                            <div class="setting-option" style="width:100%;align-items:flex-start;">
-                                <div class="option-info">
-                                    <div class="option-title">Тип, сумма, описание</div>
-                                    <div class="option-desc">Введите данные операции</div>
-                                </div>
+                            <div class="form-group" style="width:100%;">
+                                <label class="form-label">Данные операции</label>
                                 <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                                    <select id="op-type" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;">
+                                    <select id="op-type" class="form-control" style="width:auto;">
                                         <option value="income">Доход</option>
                                         <option value="expense">Расход</option>
                                     </select>
-                                    <input id="op-amount" type="number" placeholder="Сумма, ₽" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;min-width:120px;">
-                                    <input id="op-title" type="text" placeholder="Описание" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;min-width:240px;">
-                                    <input id="op-date" type="date" style="padding:10px;border:1px solid var(--light-gray);border-radius:8px;">
-                                    <button class="action-btn primary" id="add-operation">Добавить</button>
+                                    <input id="op-amount" type="number" placeholder="Сумма, ₽" class="form-control" style="width:120px;">
+                                    <input id="op-title" type="text" placeholder="Описание" class="form-control" style="width:240px;">
+                                    <input id="op-date" type="date" class="form-control" style="width:auto;">
+                                    <button class="btn btn-primary" id="add-operation">Добавить</button>
                                 </div>
                             </div>
                         </div>
@@ -1374,14 +1874,28 @@
                 </div>
 
                 <div class="transactions-list" style="margin-top:20px;">
-                    <h2 class="section-title">Операции</h2>
+                    <h2 class="settings-title">
+                        <i class="fas fa-list"></i>
+                        Операции
+                    </h2>
                     <div id="transactions"></div>
                 </div>
             </div>
             
             <!-- Аналитика -->
             <div class="screen" id="analytics-screen">
-                <h1 class="section-title">Аналитика и отчеты</h1>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Аналитика и отчеты
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i>
+                            Экспорт отчета
+                        </button>
+                    </div>
+                </div>
                 
                 <div class="analytics-grid">
                     <div class="analytics-card">
@@ -1394,20 +1908,47 @@
                         <canvas id="popularity-chart"></canvas>
                     </div>
                     
-                    <div class="analytics-card wide">
-                        <div class="chart-title">География клиентов</div>
-                        <canvas id="geography-chart"></canvas>
+                    <!-- KPI: Воронка заявок -->
+                    <div class="analytics-card">
+                        <div class="chart-title">Воронка заявок</div>
+                        <canvas id="funnel-chart"></canvas>
+                    </div>
+
+                    <!-- KPI: Конверсия по каналам -->
+                    <div class="analytics-card">
+                        <div class="chart-title">Конверсия по каналам</div>
+                        <canvas id="channels-chart"></canvas>
+                    </div>
+
+                    <!-- KPI: Повторные записи (retention) -->
+                    <div class="analytics-card">
+                        <div class="chart-title">Повторные записи</div>
+                        <canvas id="retention-chart"></canvas>
+                    </div>
+
+                    <!-- KPI: LTV и CAC -->
+                    <div class="analytics-card">
+                        <div class="chart-title">LTV vs CAC</div>
+                        <canvas id="ltv-cac-chart"></canvas>
                     </div>
                 </div>
             </div>
             
             <!-- Настройки -->
             <div class="screen" id="settings-screen">
-                <h1 class="section-title">Настройки организации</h1>
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-cog"></i>
+                        Настройки организации
+                    </h1>
+                </div>
                 
                 <div class="settings-container">
                     <div class="settings-section">
-                        <h2 class="settings-title">Основная информация</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-building"></i>
+                            Основная информация
+                        </h2>
                         
                         <div class="settings-options">
                             <div class="setting-option">
@@ -1415,7 +1956,7 @@
                                     <div class="option-title">Название организации</div>
                                     <div class="option-desc">Академия "Умница"</div>
                                 </div>
-                                <button class="action-btn secondary">Изменить</button>
+                                <button class="btn btn-secondary">Изменить</button>
                             </div>
                             
                             <div class="setting-option">
@@ -1423,7 +1964,7 @@
                                     <div class="option-title">Контактный email</div>
                                     <div class="option-desc">info@umnitsa.ru</div>
                                 </div>
-                                <button class="action-btn secondary">Изменить</button>
+                                <button class="btn btn-secondary">Изменить</button>
                             </div>
                             
                             <div class="setting-option">
@@ -1431,13 +1972,16 @@
                                     <div class="option-title">Телефон</div>
                                     <div class="option-desc">+7 (495) 123-45-67</div>
                                 </div>
-                                <button class="action-btn secondary">Изменить</button>
+                                <button class="btn btn-secondary">Изменить</button>
                             </div>
                         </div>
                     </div>
                     
                     <div class="settings-section">
-                        <h2 class="settings-title">Уведомления</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-bell"></i>
+                            Уведомления
+                        </h2>
                         
                         <div class="settings-options">
                             <div class="setting-option">
@@ -1476,7 +2020,10 @@
                     </div>
                     
                     <div class="settings-section">
-                        <h2 class="settings-title">Интеграции</h2>
+                        <h2 class="settings-title">
+                            <i class="fas fa-plug"></i>
+                            Интеграции
+                        </h2>
                         
                         <div class="settings-options">
                             <div class="setting-option">
@@ -1484,7 +2031,7 @@
                                     <div class="option-title">Подключение к CRM</div>
                                     <div class="option-desc">Интеграция с системой управления клиентами</div>
                                 </div>
-                                <button class="action-btn primary">Настроить</button>
+                                <button class="btn btn-primary">Настроить</button>
                             </div>
                             
                             <div class="setting-option">
@@ -1492,7 +2039,7 @@
                                     <div class="option-title">Платежная система</div>
                                     <div class="option-desc">Настройка приема онлайн-платежей</div>
                                 </div>
-                                <button class="action-btn primary">Настроить</button>
+                                <button class="btn btn-primary">Настроить</button>
                             </div>
                         </div>
                     </div>
@@ -1500,6 +2047,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Уведомление -->
+    <div class="notification" id="notification"></div>
 
     <script>
         // Навигация между экранами
@@ -1525,8 +2075,45 @@
                 // Показываем целевой экран
                 const targetScreen = document.getElementById(targetScreenId);
                 targetScreen.classList.add('active');
+
+                // Если открыт экран техподдержки — показываем выбор с анимацией
+                if (targetScreenId === 'support-screen') {
+                    const choice = document.getElementById('support-choice');
+                    const marketing = document.getElementById('support-marketing');
+                    const tech = document.getElementById('support-tech');
+                    if (choice && marketing && tech) {
+                        choice.style.display = '';
+                        marketing.style.display = 'none';
+                        tech.style.display = 'none';
+                        choice.classList.remove('pop-in');
+                        void choice.offsetWidth; // restart animation
+                        choice.classList.add('pop-in');
+                    }
+                }
+                
+                // Закрываем боковое меню на мобильных устройствах
+                if (window.innerWidth < 992) {
+                    document.querySelector('.sidebar').classList.remove('active');
+                }
             });
         });
+
+        // Переключение меню на мобильных устройствах
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        });
+
+        // Функция показа уведомлений
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
 
         // Инициализация простых графиков (заглушки)
         document.addEventListener('DOMContentLoaded', function() {
@@ -1536,6 +2123,92 @@
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = '#f0f0f0';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // --- Навигация по техподдержке ---
+            function openSupportChoice() {
+                const choice = document.getElementById('support-choice');
+                const marketing = document.getElementById('support-marketing');
+                const tech = document.getElementById('support-tech');
+                if (!choice || !marketing || !tech) return;
+                choice.style.display = '';
+                marketing.style.display = 'none';
+                tech.style.display = 'none';
+                choice.classList.remove('pop-in');
+                void choice.offsetWidth; choice.classList.add('pop-in');
+            }
+
+            function openSupportMarketing() {
+                const choice = document.getElementById('support-choice');
+                const marketing = document.getElementById('support-marketing');
+                const tech = document.getElementById('support-tech');
+                if (!choice || !marketing || !tech) return;
+                choice.style.display = 'none';
+                tech.style.display = 'none';
+                marketing.style.display = '';
+                marketing.classList.remove('pop-in');
+                void marketing.offsetWidth; marketing.classList.add('pop-in');
+            }
+
+            function openSupportTech() {
+                const choice = document.getElementById('support-choice');
+                const marketing = document.getElementById('support-marketing');
+                const tech = document.getElementById('support-tech');
+                if (!choice || !marketing || !tech) return;
+                choice.style.display = 'none';
+                marketing.style.display = 'none';
+                tech.style.display = '';
+                tech.classList.remove('pop-in');
+                void tech.offsetWidth; tech.classList.add('pop-in');
+            }
+
+            const openMarketingBtn = document.getElementById('open-support-marketing');
+            if (openMarketingBtn) openMarketingBtn.addEventListener('click', openSupportMarketing);
+            const openTechBtn = document.getElementById('open-support-tech');
+            if (openTechBtn) openTechBtn.addEventListener('click', openSupportTech);
+            const backChoice1 = document.getElementById('back-to-support-choice-1');
+            if (backChoice1) backChoice1.addEventListener('click', openSupportChoice);
+            const backChoice2 = document.getElementById('back-to-support-choice-2');
+            if (backChoice2) backChoice2.addEventListener('click', openSupportChoice);
+
+            // Кнопки "Написать в чат" на тарифах
+            document.querySelectorAll('.chat-open-marketing').forEach(btn => {
+                btn.addEventListener('click', () => openSupportMarketing());
+            });
+
+            // Чат маркетинга (простой заглушечный)
+            const marketingChatInput = document.getElementById('marketing-chat-input');
+            const marketingChatSend = document.getElementById('marketing-chat-send');
+            const marketingChatBox = document.getElementById('marketing-chat-box');
+            if (marketingChatSend && marketingChatInput && marketingChatBox) {
+                marketingChatSend.addEventListener('click', function() {
+                    const text = (marketingChatInput.value || '').trim();
+                    if (!text) return;
+                    const row = document.createElement('div');
+                    row.className = 'activity-item';
+                    row.innerHTML = `<div class="activity-icon"><i class="fas fa-user"></i></div><div class="activity-content"><div class="activity-title">Вы</div><div class="activity-desc">${text}</div></div>`;
+                    marketingChatBox.appendChild(row);
+                    marketingChatInput.value = '';
+                    marketingChatBox.scrollTop = marketingChatBox.scrollHeight;
+                    showNotification('Сообщение в маркетинговый чат отправлено', 'success');
+                });
+            }
+
+            // Чат техподдержки (простой заглушечный)
+            const techChatInput = document.getElementById('tech-chat-input');
+            const techChatSend = document.getElementById('tech-chat-send');
+            const techChatBox = document.getElementById('tech-chat-box');
+            if (techChatSend && techChatInput && techChatBox) {
+                techChatSend.addEventListener('click', function() {
+                    const text = (techChatInput.value || '').trim();
+                    if (!text) return;
+                    const row = document.createElement('div');
+                    row.className = 'activity-item';
+                    row.innerHTML = `<div class="activity-icon"><i class="fas fa-user"></i></div><div class="activity-content"><div class="activity-title">Вы</div><div class="activity-desc">${text}</div></div>`;
+                    techChatBox.appendChild(row);
+                    techChatInput.value = '';
+                    techChatBox.scrollTop = techChatBox.scrollHeight;
+                    showNotification('Сообщение в техподдержку отправлено', 'success');
+                });
+            }
                 
                 ctx.fillStyle = '#3498db';
                 ctx.font = '16px Arial';
@@ -1544,28 +2217,30 @@
             });
             
             // Обработчики для кнопок действий
-            const actionButtons = document.querySelectorAll('.action-btn');
+            const actionButtons = document.querySelectorAll('.btn');
             actionButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     if (this.id === 'add-course-btn') {
-                        alert('Функция добавления нового кружка');
-                    } else if (this.textContent === 'Редактировать') {
-                        alert('Редактирование кружка');
-                    } else if (this.textContent === 'Управление') {
-                        // заглушка, обработчик ниже для manage-course-btn
-                    } else if (this.textContent === 'Профиль') {
-                        alert('Просмотр профиля клиента');
-                    } else if (this.textContent === 'Изменить') {
-                        alert('Изменение настройки');
-                    } else if (this.textContent === 'Настроить') {
-                        alert('Настройка интеграции');
-                    } else if (this.textContent === 'Добавить сотрудника') {
-                        alert('Добавление нового сотрудника');
-                    } else if (this.textContent === 'Отправить') {
-                        alert('Сообщение отправлено в техподдержку');
-                    } else if (this.textContent === 'Скопировать') {
+                        showNotification('Функция добавления нового кружка', 'info');
+                    } else if (this.textContent.includes('Редактировать')) {
+                        showNotification('Редактирование кружка', 'info');
+                    } else if (this.textContent.includes('Профиль')) {
+                        showNotification('Просмотр профиля клиента', 'info');
+                    } else if (this.textContent.includes('Изменить')) {
+                        showNotification('Изменение настройки', 'info');
+                    } else if (this.textContent.includes('Настроить')) {
+                        showNotification('Настройка интеграции', 'info');
+                    } else if (this.textContent.includes('Добавить сотрудника')) {
+                        showNotification('Добавление нового сотрудника', 'info');
+                    } else if (this.textContent.includes('Отправить')) {
+                        showNotification('Сообщение отправлено в техподдержку', 'success');
+                    } else if (this.textContent.includes('Скопировать')) {
                         navigator.clipboard.writeText('support@kidcircle.pro');
-                        alert('Email скопирован: support@kidcircle.pro');
+                        showNotification('Email скопирован: support@kidcircle.pro', 'success');
+                    } else if (this.textContent.includes('Создать отчет')) {
+                        showNotification('Отчет создан и отправлен на email', 'success');
+                    } else if (this.textContent.includes('Экспорт отчета')) {
+                        showNotification('Отчет экспортирован в формате PDF', 'success');
                     }
                 });
             });
@@ -1574,7 +2249,7 @@
             const navButtons = document.querySelectorAll('.nav-btn');
             navButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    alert('Навигация по неделям');
+                    showNotification('Навигация по неделям', 'info');
                 });
             });
             
@@ -1582,7 +2257,10 @@
             const timeSlots = document.querySelectorAll('.time-slot');
             timeSlots.forEach(slot => {
                 slot.addEventListener('click', function() {
-                    alert('Информация о занятии: ' + this.querySelector('div:nth-child(2)').textContent);
+                    const content = this.querySelector('div:nth-child(2)');
+                    if (content) {
+                        showNotification('Информация о занятии: ' + content.textContent, 'info');
+                    }
                 });
             });
 
@@ -1652,8 +2330,8 @@
                             <div class="activity-title" style="margin-bottom:6px;">${rev.author}</div>
                             <div class="activity-desc" style="color:var(--dark);">${rev.text}</div>
                             <div style="margin-top:10px;display:flex;gap:8px;align-items:center;">
-                                <input type="text" placeholder="Ответить..." data-reply-input="${idx}" style="padding:8px;border-radius:8px;border:1px solid var(--light-gray);flex:1;">
-                                <button class="action-btn secondary" data-reply-btn="${idx}">Ответить</button>
+                                <input type="text" placeholder="Ответить..." data-reply-input="${idx}" class="form-control">
+                                <button class="btn btn-secondary" data-reply-btn="${idx}">Ответить</button>
                             </div>
                             <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
                                 ${(rev.replies||[]).map(r => `<div style=\"font-size:0.9rem;color:var(--gray);\">↳ ${r}</div>`).join('')}
@@ -1673,6 +2351,7 @@
                         course.reviews[idx].replies = course.reviews[idx].replies || [];
                         course.reviews[idx].replies.push(text);
                         renderReviews(course);
+                        showNotification('Ответ добавлен', 'success');
                     });
                 });
             }
@@ -1707,7 +2386,10 @@
                                     </div>
                                 </div>
                                 <div class="course-actions">
-                                    <button class="action-btn primary manage-course-btn" data-course-id="${course.id}" data-group-id="${group.id}">Управление</button>
+                                    <button class="btn btn-primary manage-course-btn" data-course-id="${course.id}" data-group-id="${group.id}">
+                                        <i class="fas fa-cog"></i>
+                                        Управление
+                                    </button>
                                 </div>
                             </div>
                         `;
@@ -1750,7 +2432,7 @@
                     row.style.maxWidth = '70%';
                     row.style.padding = '10px 12px';
                     row.style.borderRadius = '12px';
-                    row.style.background = m.from === 'org' ? 'var(--secondary)' : 'var(--light)';
+                    row.style.background = m.from === 'org' ? 'var(--primary)' : 'var(--light)';
                     row.style.color = m.from === 'org' ? '#fff' : 'var(--dark)';
                     row.textContent = m.text;
                     box.appendChild(row);
@@ -1784,6 +2466,7 @@
                 chatData[currentChatId].push({ from: 'org', text });
                 input.value = '';
                 renderMessages(currentChatId);
+                showNotification('Сообщение отправлено', 'success');
             });
 
             // Создание нового кружка
@@ -1802,6 +2485,7 @@
                 };
                 renderCourseGroupCards();
                 openCourseDetail(newCourseId, firstGroupId);
+                showNotification('Новый кружок создан', 'success');
             });
 
             // сохранить изменения
@@ -1861,7 +2545,7 @@
                 document.getElementById('detail-category').textContent = `${course.category}${group && group.age ? ' • Возраст: ' + group.age : ''}`;
                 renderCourseGroupCards();
                 renderGlobalSchedule();
-                alert('Изменения сохранены');
+                showNotification('Изменения сохранены', 'success');
                 // если текущая группа удалилась выше — перерисуем детали для новой текущей
                 if (currentGroupId && (!course.groups.find(g => g.id === currentGroupId))) {
                     const fallbackId = (course.groups[0] || {}).id;
@@ -1878,7 +2562,7 @@
                 renderCourseGroupCards();
                 screens.forEach(screen => screen.classList.remove('active'));
                 coursesScreen.classList.add('active');
-                alert('Кружок удален');
+                showNotification('Кружок удален', 'success');
             });
 
             // удалить группу
@@ -1897,7 +2581,7 @@
                     screens.forEach(screen => screen.classList.remove('active'));
                     coursesScreen.classList.add('active');
                 }
-                alert('Группа удалена');
+                showNotification('Группа удалена', 'success');
             });
 
             // назад к списку кружков
@@ -1921,7 +2605,7 @@
                             <div class="activity-title">${dayName(slot.day)}, ${slot.time}</div>
                             <div class="activity-desc"></div>
                         </div>
-                        <button class="action-btn secondary" data-remove-slot="${idx}">Удалить</button>
+                        <button class="btn btn-sm btn-secondary" data-remove-slot="${idx}">Удалить</button>
                     `;
                     list.appendChild(row);
                 });
@@ -1931,6 +2615,7 @@
                         group.schedule.splice(idx, 1);
                         renderCourseScheduleGroup(course, group);
                         renderGlobalSchedule();
+                        showNotification('Занятие удалено из расписания', 'success');
                     });
                 });
             }
@@ -1950,6 +2635,7 @@
                 group.schedule.push({ day, time });
                 renderCourseScheduleGroup(course, group);
                 renderGlobalSchedule();
+                showNotification('Занятие добавлено в расписание', 'success');
             });
 
             // ------- Глобальное расписание -------
@@ -2052,6 +2738,7 @@
                     document.getElementById('op-amount').value = '';
                     document.getElementById('op-title').value = '';
                     renderFinance();
+                    showNotification('Операция добавлена', 'success');
                 });
             }
 
