@@ -1367,61 +1367,83 @@
                         </div>
                     </div>
                     
-                    <div class="promo-card dashboard-promo" id="dashboard-marketing-promo">
-                        <div class="ad-badge">РЕКОМЕНДУЕМ</div>
-                        <div class="promo-icon">
-                            <i class="fas fa-rocket"></i>
+                    <div class="recent-activity">
+                        <h2 class="settings-title">
+                            <i class="fas fa-history"></i>
+                            Последняя активность
+                        </h2>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Новая регистрация</div>
+                                    <div class="activity-desc">Иванова Мария записалась на курс "Робототехника"</div>
+                                </div>
+                                <div class="activity-time">10 мин назад</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Оплата получена</div>
+                                    <div class="activity-desc">Петров Алексей оплатил абонемент на месяц</div>
+                                </div>
+                                <div class="activity-time">2 часа назад</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Новое расписание</div>
+                                    <div class="activity-desc">Добавлено новое занятие по рисованию на субботу</div>
+                                </div>
+                                <div class="activity-time">5 часов назад</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Сообщение от клиента</div>
+                                    <div class="activity-desc">Вопрос по переносу занятия (Иванов Иван)</div>
+                                </div>
+                                <div class="activity-time">Вчера</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Новый отзыв</div>
+                                    <div class="activity-desc">"Отличный преподаватель и программа" — Анна</div>
+                                </div>
+                                <div class="activity-time">2 дня назад</div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Посещаемость отмечена</div>
+                                    <div class="activity-desc">Робототехника • Группа 1 — 10/12 присутствовали</div>
+                                </div>
+                                <div class="activity-time">3 дня назад</div>
+                            </div>
                         </div>
-                        <div class="promo-title">Увеличьте количество заявок и записей!</div>
-                        <div class="promo-desc">Получите профессиональные услуги по продвижению: реклама, лендинги, аналитика. Специальные условия для клиентов KIDCIRCLE PRO!</div>
-                        <button class="btn btn-primary" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
-                            <i class="fas fa-bullhorn"></i> Узнать о продвижении
-                            <i class="fas fa-arrow-right promo-arrow" style="margin-left: 8px;"></i>
-                        </button>
+                        <div style="margin-top:10px; display:flex; justify-content:flex-end;">
+                            <button class="btn btn-secondary" id="open-activity-full">
+                                <i class="fas fa-list"></i>
+                                Смотреть все
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="recent-activity">
-                    <h2 class="settings-title">
-                        <i class="fas fa-history"></i>
-                        Последняя активность
-                    </h2>
-                    
-                    <div class="activity-list">
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Новая регистрация</div>
-                                <div class="activity-desc">Иванова Мария записалась на курс "Робототехника"</div>
-                            </div>
-                            <div class="activity-time">10 мин назад</div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-credit-card"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Оплата получена</div>
-                                <div class="activity-desc">Петров Алексей оплатил абонемент на месяц</div>
-                            </div>
-                            <div class="activity-time">2 часа назад</div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-calendar-check"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">Новое расписание</div>
-                                <div class="activity-desc">Добавлено новое занятие по рисованию на субботу</div>
-                            </div>
-                            <div class="activity-time">5 часов назад</div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
             
             <!-- Управление кружками -->
@@ -1569,11 +1591,13 @@
                     </h1>
                     <div class="header-actions">
                         <div class="week-navigation">
-                            <button class="nav-btn" id="prev-week" title="Предыдущая неделя"><i class="fas fa-chevron-left"></i></button>
+                            <button class="nav-btn" id="prev-range" title="Назад"><i class="fas fa-chevron-left"></i></button>
                             <div id="week-label">Текущая неделя</div>
-                            <button class="nav-btn" id="next-week" title="Следующая неделя"><i class="fas fa-chevron-right"></i></button>
-                            <button class="nav-btn" id="prev-month" title="Предыдущий месяц"><i class="fas fa-angle-double-left"></i></button>
-                            <button class="nav-btn" id="next-month" title="Следующий месяц"><i class="fas fa-angle-double-right"></i></button>
+                            <button class="nav-btn" id="next-range" title="Вперед"><i class="fas fa-chevron-right"></i></button>
+                            <div style="display:inline-flex; gap:6px; margin-left: 8px;">
+                                <button class="btn btn-secondary" id="range-week" aria-pressed="true">Неделя</button>
+                                <button class="btn btn-secondary" id="range-month" aria-pressed="false">Месяц</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1589,10 +1613,7 @@
                         <div class="day-header">Воскресенье</div>
                     </div>
                     <div class="day-slots" id="global-day-slots"></div>
-                    <div class="recent-activity" style="margin-top:20px;">
-                        <h2 class="settings-title"><i class="fas fa-clock"></i> Предыдущие и следующие занятия</h2>
-                        <div id="timeline-sessions" class="activity-list"></div>
-                    </div>
+                    <div id="month-grid" style="display:none; margin-top:10px; display:none; grid-template-columns: repeat(7, 1fr); gap: 10px;"></div>
                 </div>
             </div>
             
@@ -2087,6 +2108,21 @@
                         <canvas id="rating-chart"></canvas>
                     </div>
                 </div>
+
+                <div class="settings-container" style="margin-top:20px;">
+                    <div class="settings-section">
+                        <h2 class="settings-title">
+                            <i class="fas fa-clipboard-check"></i>
+                            Отчет по посещаемости
+                        </h2>
+                        <div class="settings-options" style="margin-bottom:10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                            <select id="report-course" class="form-control" style="width:auto;"></select>
+                            <select id="report-group" class="form-control" style="width:auto;"></select>
+                            <button class="btn btn-primary" id="render-attendance-report"><i class="fas fa-sync"></i> Обновить отчет</button>
+                        </div>
+                        <div class="activity-list" id="attendance-report"></div>
+                    </div>
+                </div>
             </div>
             
             <!-- Настройки -->
@@ -2542,16 +2578,15 @@
             });
 
             // Кнопка промо на главной
-            const marketingPromo = document.getElementById('dashboard-marketing-promo');
-            if (marketingPromo) {
-                marketingPromo.addEventListener('click', function() {
-                    // открыть техподдержку сразу в маркетинге
-                    const supportNav = document.querySelector('[data-screen="support-screen"]');
-                    if (supportNav) supportNav.click();
-                    setTimeout(() => {
-                        const mTab = document.querySelector('.support-tab[data-tab="marketing"]');
-                        if (mTab) mTab.click();
-                    }, 80);
+            const openActivityFull = document.getElementById('open-activity-full');
+            if (openActivityFull) {
+                openActivityFull.addEventListener('click', function() {
+                    // Переход к разделу «Последняя активность» на главной (пролистывание) — заглушка
+                    const dash = document.getElementById('dashboard-screen');
+                    if (!dash) return;
+                    screens.forEach(screen => screen.classList.remove('active'));
+                    dash.classList.add('active');
+                    dash.scrollIntoView({ behavior: 'smooth' });
                 });
             }
             
@@ -3008,26 +3043,118 @@
             renderGlobalSchedule();
 
             // Навигация по неделям/месяцам (упрощенно меняем заголовок)
-            let weekOffset = 0; // 0 = текущая
+            let rangeOffset = 0; // 0 = текущая неделя/месяц
+            let rangeMode = 'week';
             function updateWeekLabel() {
                 const label = document.getElementById('week-label');
                 const base = new Date();
                 const monday = new Date(base);
                 const day = monday.getDay();
                 const diffToMonday = (day === 0 ? -6 : 1) - day; // сделать понедельник
-                monday.setDate(base.getDate() + diffToMonday + weekOffset * 7);
-                const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
-                label.textContent = `${monday.toLocaleDateString('ru-RU')} — ${sunday.toLocaleDateString('ru-RU')}`;
+                const weekContainer = document.getElementById('global-day-slots');
+                const monthContainer = document.getElementById('month-grid');
+                if (rangeMode === 'week') {
+                    if (weekContainer) weekContainer.style.display = '';
+                    if (monthContainer) monthContainer.style.display = 'none';
+                    monday.setDate(base.getDate() + diffToMonday + rangeOffset * 7);
+                    const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+                    label.textContent = `${monday.toLocaleDateString('ru-RU')} — ${sunday.toLocaleDateString('ru-RU')}`;
+                } else {
+                    if (weekContainer) weekContainer.style.display = 'none';
+                    if (monthContainer) monthContainer.style.display = 'grid';
+                    const monthBase = new Date(base.getFullYear(), base.getMonth() + rangeOffset, 1);
+                    const monthEnd = new Date(monthBase.getFullYear(), monthBase.getMonth() + 1, 0);
+                    label.textContent = `${monthBase.toLocaleDateString('ru-RU')} — ${monthEnd.toLocaleDateString('ru-RU')}`;
+                    renderMonthGrid(monthBase);
+                }
             }
-            const prevWeekBtn = document.getElementById('prev-week');
-            const nextWeekBtn = document.getElementById('next-week');
-            const prevMonthBtn = document.getElementById('prev-month');
-            const nextMonthBtn = document.getElementById('next-month');
-            if (prevWeekBtn) prevWeekBtn.addEventListener('click', () => { weekOffset -= 1; updateWeekLabel(); });
-            if (nextWeekBtn) nextWeekBtn.addEventListener('click', () => { weekOffset += 1; updateWeekLabel(); });
-            if (prevMonthBtn) prevMonthBtn.addEventListener('click', () => { weekOffset -= 4; updateWeekLabel(); });
-            if (nextMonthBtn) nextMonthBtn.addEventListener('click', () => { weekOffset += 4; updateWeekLabel(); });
+            const prevRangeBtn = document.getElementById('prev-range');
+            const nextRangeBtn = document.getElementById('next-range');
+            const rangeWeekBtn = document.getElementById('range-week');
+            const rangeMonthBtn = document.getElementById('range-month');
+            if (prevRangeBtn) prevRangeBtn.addEventListener('click', () => { rangeOffset -= 1; updateWeekLabel(); });
+            if (nextRangeBtn) nextRangeBtn.addEventListener('click', () => { rangeOffset += 1; updateWeekLabel(); });
+            function setRangeMode(mode) {
+                rangeMode = mode; rangeOffset = 0;
+                if (rangeWeekBtn && rangeMonthBtn) {
+                    rangeWeekBtn.classList.toggle('btn-primary', mode === 'week');
+                    rangeWeekBtn.classList.toggle('btn-secondary', mode !== 'week');
+                    rangeWeekBtn.setAttribute('aria-pressed', String(mode === 'week'));
+                    rangeMonthBtn.classList.toggle('btn-primary', mode === 'month');
+                    rangeMonthBtn.classList.toggle('btn-secondary', mode !== 'month');
+                    rangeMonthBtn.setAttribute('aria-pressed', String(mode === 'month'));
+                }
+                updateWeekLabel();
+            }
+            if (rangeWeekBtn) rangeWeekBtn.addEventListener('click', () => setRangeMode('week'));
+            if (rangeMonthBtn) rangeMonthBtn.addEventListener('click', () => setRangeMode('month'));
             updateWeekLabel();
+
+            function renderMonthGrid(monthBase) {
+                const grid = document.getElementById('month-grid');
+                if (!grid) return;
+                grid.innerHTML = '';
+                // заголовки дней
+                const headers = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+                headers.forEach(h => {
+                    const hd = document.createElement('div');
+                    hd.className = 'day-header';
+                    hd.textContent = h;
+                    grid.appendChild(hd);
+                });
+                const firstDay = new Date(monthBase.getFullYear(), monthBase.getMonth(), 1);
+                const lastDay = new Date(monthBase.getFullYear(), monthBase.getMonth() + 1, 0);
+                // смещение на понедельник
+                const startWeekday = ((firstDay.getDay() + 6) % 7); // 0..6 (Пн..Вс)
+                for (let i = 0; i < startWeekday; i++) {
+                    const filler = document.createElement('div');
+                    filler.className = 'time-slot empty';
+                    filler.innerHTML = '<div></div><div></div><div></div>';
+                    grid.appendChild(filler);
+                }
+                const totalDays = lastDay.getDate();
+                for (let dayNum = 1; dayNum <= totalDays; dayNum++) {
+                    const d = new Date(monthBase.getFullYear(), monthBase.getMonth(), dayNum);
+                    const weekday = ((d.getDay() + 6) % 7); // 0..6
+                    const col = document.createElement('div');
+                    col.style.display = 'flex';
+                    col.style.flexDirection = 'column';
+                    col.style.gap = '10px';
+                    // заголовок дня
+                    const head = document.createElement('div');
+                    head.className = 'day-header';
+                    head.textContent = String(dayNum);
+                    col.appendChild(head);
+                    // слоты, чьи weekly расписания попадают по дню недели
+                    const slots = [];
+                    Object.values(coursesData).forEach(course => {
+                        (course.groups || []).forEach(group => {
+                            (group.schedule || []).forEach(slot => {
+                                if (slot.day === weekday) slots.push({ course, group, slot });
+                            });
+                        });
+                    });
+                    if (!slots.length) {
+                        const empty = document.createElement('div');
+                        empty.className = 'time-slot empty';
+                        empty.innerHTML = '<div>—</div><div>Нет занятий</div><div></div>';
+                        col.appendChild(empty);
+                    } else {
+                        slots.sort((a,b) => (a.slot.time > b.slot.time ? 1 : -1));
+                        slots.forEach(({course, group, slot}) => {
+                            const ts = document.createElement('div');
+                            ts.className = 'time-slot available';
+                            ts.setAttribute('data-course-id', course.id);
+                            ts.setAttribute('data-group-id', group.id);
+                            ts.setAttribute('data-day', String(weekday));
+                            ts.setAttribute('data-time', slot.time);
+                            ts.innerHTML = `<div>${slot.time}</div><div>${course.title} • ${group.name}${group.age ? ' (' + group.age + ')' : ''}</div><div class="slot-actions"><button class="slot-btn" data-open-lesson>Управление</button></div>`;
+                            col.appendChild(ts);
+                        });
+                    }
+                    grid.appendChild(col);
+                }
+            }
 
             // Редактирование слотов: перенос/отмена (упрощенно)
             document.getElementById('global-day-slots').addEventListener('click', (e) => {
@@ -3101,6 +3228,7 @@
                 }
                 topicInput.value = attendanceState[key].topic || '';
                 list.innerHTML = '';
+                list.setAttribute('data-slot-key', key);
                 attendanceState[key].students.forEach(st => {
                     const row = document.createElement('div');
                     row.className = 'activity-item';
@@ -3116,16 +3244,26 @@
                     list.appendChild(row);
                 });
 
-                list.addEventListener('click', function onClick(e) {
-                    const btn = e.target.closest('[data-toggle-present]');
-                    if (!btn) return;
-                    const sid = btn.getAttribute('data-toggle-present');
-                    const item = attendanceState[key].students.find(s => s.id === sid);
-                    if (!item) return;
-                    item.present = !item.present;
-                    openLessonModal({ courseId, groupId, day, time });
-                    list.removeEventListener('click', onClick);
-                }, { once: true });
+                // делегирование без перерендера
+                if (!list._attendanceBound) {
+                    list.addEventListener('click', function(e) {
+                        const btn = e.target.closest('[data-toggle-present]');
+                        if (!btn) return;
+                        const sid = btn.getAttribute('data-toggle-present');
+                        const k = list.getAttribute('data-slot-key');
+                        const state = attendanceState[k];
+                        if (!state) return;
+                        const student = state.students.find(s => s.id === sid);
+                        if (!student) return;
+                        student.present = !student.present;
+                        // обновить UI в текущей строке
+                        const row = btn.closest('.activity-item');
+                        const desc = row && row.querySelector('.activity-desc');
+                        if (desc) desc.innerHTML = student.present ? '<span class="badge badge-success">Присутствовал</span>' : '<span class="badge badge-error">Отсутствовал</span>';
+                        btn.textContent = student.present ? 'Снять' : 'Отметить';
+                    });
+                    list._attendanceBound = true;
+                }
 
                 // кнопки модала
                 document.getElementById('lesson-close').onclick = () => { modal.style.display = 'none'; };
@@ -3133,6 +3271,8 @@
                     attendanceState[key].topic = topicInput.value.trim();
                     showNotification('Посещаемость сохранена', 'success');
                     modal.style.display = 'none';
+                    // обновить отчет, если открыт
+                    tryRenderAttendanceReport();
                 };
                 document.getElementById('lesson-reschedule').onclick = () => {
                     const newTime = prompt('Новая время, например 14:30', time);
@@ -3149,39 +3289,94 @@
                 modal.style.display = 'flex';
             }
 
-            // Списки прошлых и будущих занятий с темами и отметками посещаемости (демо)
-            function renderTimelineSessions() {
-                const box = document.getElementById('timeline-sessions');
-                if (!box) return;
+            // ---- Отчет по посещаемости (Аналитика) ----
+            function populateReportSelectors() {
+                const courseSel = document.getElementById('report-course');
+                const groupSel = document.getElementById('report-group');
+                if (!courseSel || !groupSel) return;
+                courseSel.innerHTML = '';
+                groupSel.innerHTML = '';
+                const courses = Object.values(coursesData);
+                courses.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id; opt.textContent = c.title;
+                    courseSel.appendChild(opt);
+                });
+                if (courses.length) {
+                    const firstCourseId = courseSel.value || courses[0].id;
+                    populateGroups(firstCourseId);
+                }
+                courseSel.onchange = () => populateGroups(courseSel.value);
+
+                function populateGroups(courseId) {
+                    groupSel.innerHTML = '';
+                    const course = coursesData[courseId];
+                    (course && course.groups || []).forEach(g => {
+                        const opt = document.createElement('option');
+                        opt.value = g.id; opt.textContent = g.name + (g.age ? ` (${g.age})` : '');
+                        groupSel.appendChild(opt);
+                    });
+                }
+            }
+
+            function renderAttendanceReport() {
+                const courseSel = document.getElementById('report-course');
+                const groupSel = document.getElementById('report-group');
+                const box = document.getElementById('attendance-report');
+                if (!courseSel || !groupSel || !box) return;
+                const courseId = courseSel.value;
+                const groupId = groupSel.value;
                 box.innerHTML = '';
-                const samples = [
-                    { when: 'Прошедшее', date: '2025-05-10', course: 'Робототехника', group: 'Группа 1', topic: 'Датчики и моторы', attended: true },
-                    { when: 'Будущее', date: '2025-05-20', course: 'Робототехника', group: 'Группа 2', topic: 'Сборка манипулятора', attended: null },
-                ];
-                samples.forEach(s => {
+
+                // собрать все записи по выбранной группе
+                const entries = Object.entries(attendanceState)
+                    .map(([k, v]) => ({ k, v }))
+                    .filter(({ k }) => k.startsWith(`${courseId}|${groupId}|`));
+                if (!entries.length) {
+                    const empty = document.createElement('div');
+                    empty.style.color = 'var(--gray)';
+                    empty.textContent = 'Пока нет данных по посещаемости.';
+                    box.appendChild(empty);
+                    return;
+                }
+                entries.sort((a, b) => a.k.localeCompare(b.k));
+                entries.forEach(({ k, v }) => {
+                    const [, , dayStr, time] = k.split('|');
+                    const dayIdx = Number(dayStr);
+                    const presentCount = v.students.filter(s => s.present).length;
+                    const total = v.students.length;
                     const row = document.createElement('div');
                     row.className = 'activity-item';
                     row.innerHTML = `
-                        <div class="activity-icon"><i class="fas ${s.when === 'Прошедшее' ? 'fa-check' : 'fa-clock'}"></i></div>
+                        <div class="activity-icon"><i class="fas fa-clipboard-check"></i></div>
                         <div class="activity-content">
-                            <div class="activity-title">${s.when}: ${new Date(s.date).toLocaleDateString('ru-RU')} — ${s.course} • ${s.group}</div>
-                            <div class="activity-desc">Тема: ${s.topic}</div>
-                        </div>
-                        <div>
-                            ${s.attended === null ? '<button class="btn btn-sm btn-secondary" data-mark>Отметить посещаемость</button>' : (s.attended ? '<span class="badge badge-success">Посетил</span>' : '<span class="badge badge-error">Отсутствовал</span>')}
+                            <div class="activity-title">${dayName(dayIdx)}, ${time} — Тема: ${v.topic || '—'}</div>
+                            <div class="activity-desc">Присутствовало: ${presentCount} из ${total}</div>
                         </div>
                     `;
                     box.appendChild(row);
                 });
-                box.addEventListener('click', (e) => {
-                    const mark = e.target.closest('[data-mark]');
-                    if (!mark) return;
-                    const choice = confirm('Отметить как присутствовал? Отклоните для отсутствовал.');
-                    mark.replaceWith(choice ? createBadge('success', 'Посетил') : createBadge('error', 'Отсутствовал'));
+            }
+
+            function tryRenderAttendanceReport() {
+                // если находимся на экране аналитики — обновим
+                const analytics = document.getElementById('analytics-screen');
+                if (analytics && analytics.classList.contains('active')) {
+                    renderAttendanceReport();
+                }
+            }
+
+            const renderReportBtn = document.getElementById('render-attendance-report');
+            if (renderReportBtn) renderReportBtn.addEventListener('click', renderAttendanceReport);
+            // при первом показе аналитики — заполним селекторы
+            const analyticsNav = document.querySelector('[data-screen="analytics-screen"]');
+            if (analyticsNav) {
+                analyticsNav.addEventListener('click', () => {
+                    setTimeout(() => { populateReportSelectors(); renderAttendanceReport(); }, 0);
                 });
             }
-            function createBadge(kind, text) { const s = document.createElement('span'); s.className = `badge badge-${kind}`; s.textContent = text; return s; }
-            renderTimelineSessions();
+
+            // Удален демо-блок «Предыдущие и следующие занятия»
 
             // ------- Финансы -------
             const financeData = {
