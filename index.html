@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+нет смотри посещаемость будет отмечать преподаватель это аккаунт как раз его то есть когда мы создали группу создали занятие оно у нас подтянулось в расписание а ниже показывается списокм это занятие и нажам на него мы можем отменить или перенсти заполнить тему занятия и сипоск клиентов которые на него записаны мы отмечаем кто пришел а кто нет <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -642,6 +642,17 @@
             border-color: var(--accent);
         }
         
+        .time-slot.empty {
+            background: #fff7ed; /* warm light orange */
+            color: #b45309; /* amber-700 */
+            border-color: #fdba74; /* amber-300 */
+        }
+        .time-slot.empty:hover { background: #ffedd5; }
+        
+        .slot-actions { display:flex; gap:6px; justify-content:center; margin-top:6px; }
+        .slot-btn { padding:4px 8px; border-radius:6px; font-size:0.8rem; border:1px solid var(--light-gray); background:#fff; cursor:pointer; }
+        .slot-btn:hover { background: var(--primary-light); }
+        
         /* Экран управления клиентами */
         .clients-table {
             width: 100%;
@@ -1130,34 +1141,78 @@
         @keyframes popIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
         .choice-card { cursor: pointer; transition: var(--transition); }
         .choice-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-        
-        /* Полноэкранный выбор в техподдержке */
-        .support-choice-full {
-            min-height: calc(100vh - 140px);
-            display: flex;
-            align-items: center;
-        }
-        .support-choice-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            width: 100%;
-        }
-        @media (max-width: 992px) {
-            .support-choice-grid { grid-template-columns: 1fr; }
-        }
-        .choice-card-big {
+
+        /* УЛУЧШЕННЫЕ СТИЛИ ДЛЯ РЕКЛАМНЫХ БЛОКОВ */
+        .promo-card {
+            background: linear-gradient(135deg, #4cc9f0 0%, #7209b7 100%);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-lg);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            height: 56vh;
-            min-height: 320px;
+            align-items: center;
             text-align: center;
+            min-height: 300px;
         }
-        .choice-card-big .settings-title { margin-bottom: 12px; }
-        .choice-card-big .settings-title i { font-size: 1.6rem; }
-        .choice-card-big .choice-desc { color: var(--gray); font-size: 1rem; }
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%);
+            transform: rotate(30deg);
+            transition: var(--transition);
+        }
+        .promo-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .promo-card:hover::before { transform: rotate(30deg) translateX(50px); }
+        .promo-icon { font-size: 3rem; margin-bottom: 20px; background: rgba(255,255,255,0.2); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        .promo-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
+        .promo-desc { font-size: 1rem; margin-bottom: 20px; opacity: 0.9; }
+        .promo-arrow { font-size: 1.2rem; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%,20%,50%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-5px); } 60% { transform: translateY(-3px); } }
+        .ad-badge { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.2); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
+        .finance-promo { background: linear-gradient(135deg, #4ade80 0%, #3a56d4 100%); }
+        .dashboard-promo { background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); }
+
+        /* УЛУЧШЕННЫЙ ДИЗАЙН ТЕХПОДДЕРЖКИ */
+        .support-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid var(--light-gray); padding-bottom: 10px; }
+        .support-tab { padding: 12px 24px; background: var(--light); border-radius: 8px; cursor: pointer; transition: var(--transition); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .support-tab.active { background: var(--primary); color: white; }
+        .support-tab:hover:not(.active) { background: var(--primary-light); color: var(--primary); }
+        .support-content { display: none; }
+        .support-content.active { display: block; animation: fadeIn 0.5s ease; }
+        .service-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .service-card { background: var(--surface); border-radius: var(--radius-lg); padding: 25px; box-shadow: var(--shadow); transition: var(--transition); border-left: 4px solid var(--primary); }
+        .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .service-card.premium { border-left-color: var(--warning); position: relative; overflow: hidden; }
+        .service-card.premium::before { content: 'ПРЕМИУМ'; position: absolute; top: 10px; right: -30px; background: var(--warning); color: white; padding: 5px 30px; transform: rotate(45deg); font-size: 0.7rem; font-weight: 700; }
+        .service-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .service-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 5px; }
+        .service-price { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .service-features { list-style: none; margin: 15px 0; }
+        .service-features li { padding: 5px 0; display: flex; align-items: center; gap: 8px; }
+        .service-features li i { color: var(--success); }
+
+        /* ЧАТЫ (единый стиль для маркетинга и техподдержки) */
+        .chat-container { display: flex; flex-direction: column; height: 420px; background: var(--light); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+        .chat-messages { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f6f8fc; }
+        .message { max-width: 70%; padding: 10px 12px; border-radius: 14px; line-height: 1.4; font-size: 0.95rem; }
+        .message.user { align-self: flex-end; background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
+        .message.support { align-self: flex-start; background: #fff; color: var(--dark); border-bottom-left-radius: 4px; box-shadow: var(--shadow-sm); }
+        .message-time { font-size: 0.72rem; opacity: 0.7; margin-top: 4px; text-align: right; }
+        .chat-input-container { display: flex; padding: 10px; background: #fff; border-top: 1px solid var(--light-gray); }
+        .chat-input { flex: 1; padding: 10px 12px; border: 1px solid var(--light-gray); border-radius: 20px; outline: none; transition: var(--transition); background: #fff; }
+        .chat-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67,97,238,0.08); }
+        .chat-send { margin-left: 8px; background: var(--primary); color: #fff; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+        .chat-send:hover { background: var(--primary-dark); transform: translateY(-1px); }
     </style>
 </head>
 <body>
@@ -1178,7 +1233,7 @@
             <div class="nav-section">
                 <div class="nav-item active" data-screen="dashboard-screen">
                     <i class="fas fa-tachometer-alt nav-icon"></i>
-                    <span class="nav-text">Дашборд</span>
+                    <span class="nav-text">Главная</span>
                 </div>
                 <div class="nav-item" data-screen="courses-screen">
                     <i class="fas fa-graduation-cap nav-icon"></i>
@@ -1232,14 +1287,9 @@
                 <div class="page-header">
                     <h1 class="page-title">
                         <i class="fas fa-tachometer-alt"></i>
-                        Панель управления
+                        Главная
                     </h1>
-                    <div class="header-actions">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-plus"></i>
-                            Создать отчет
-                        </button>
-                    </div>
+                    <div class="header-actions"></div>
                 </div>
                 
                 <div class="dashboard-stats">
@@ -1278,17 +1328,56 @@
                             <span>3% за месяц</span>
                         </div>
                     </div>
+                    
+                    <!-- 5-й блок: Динамика регистраций -->
+                    <div class="stat-card" style="padding:20px;">
+                        <div class="stat-title" style="margin-bottom:10px;">Динамика регистраций</div>
+                        <div style="height:120px;background:var(--primary-light);border-radius:8px;padding:6px;display:flex;align-items:center;justify-content:center;">
+                            <canvas id="registrations-chart" style="width:100%;height:100%;"></canvas>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="charts-section">
-                    <div class="chart-container">
-                        <div class="chart-title">Динамика регистраций</div>
-                        <canvas id="registrations-chart"></canvas>
+                    <!-- Слева: дополнительные рекламные блоки -->
+                    <div style="display:flex;flex-direction:column;gap:20px;">
+                        <div class="promo-card dashboard-promo">
+                            <div class="ad-badge">РЕКОМЕНДУЕМ</div>
+                            <div class="promo-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="promo-title">Увеличьте количество заявок и записей!</div>
+                            <div class="promo-desc">Реклама, лендинги, аналитика. Специальные условия для клиентов KIDCIRCLE PRO!</div>
+                            <button class="btn btn-primary" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
+                                <i class="fas fa-bullhorn"></i> Узнать о продвижении
+                                <i class="fas fa-arrow-right promo-arrow" style="margin-left: 8px;"></i>
+                            </button>
+                        </div>
+                        <div class="promo-card" style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);">
+                            <div class="ad-badge">СПЕЦПРЕДЛОЖЕНИЕ</div>
+                            <div class="promo-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <div class="promo-title">Точный таргет на родителей</div>
+                            <div class="promo-desc">Настроим рекламу под ваш город и возрастные группы. Больше релевантных заявок.</div>
+                            <button class="btn btn-primary" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
+                                <i class="fas fa-paper-plane"></i> Получить консультацию
+                                <i class="fas fa-arrow-right promo-arrow" style="margin-left: 8px;"></i>
+                            </button>
+                        </div>
                     </div>
                     
-                    <div class="chart-container">
-                        <div class="chart-title">Распределение по возрастам</div>
-                        <canvas id="age-chart"></canvas>
+                    <div class="promo-card dashboard-promo" id="dashboard-marketing-promo">
+                        <div class="ad-badge">РЕКОМЕНДУЕМ</div>
+                        <div class="promo-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="promo-title">Увеличьте количество заявок и записей!</div>
+                        <div class="promo-desc">Получите профессиональные услуги по продвижению: реклама, лендинги, аналитика. Специальные условия для клиентов KIDCIRCLE PRO!</div>
+                        <button class="btn btn-primary" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3);">
+                            <i class="fas fa-bullhorn"></i> Узнать о продвижении
+                            <i class="fas fa-arrow-right promo-arrow" style="margin-left: 8px;"></i>
+                        </button>
                     </div>
                 </div>
                 
@@ -1480,9 +1569,11 @@
                     </h1>
                     <div class="header-actions">
                         <div class="week-navigation">
-                            <div class="nav-btn"><i class="fas fa-chevron-left"></i></div>
+                            <button class="nav-btn" id="prev-week" title="Предыдущая неделя"><i class="fas fa-chevron-left"></i></button>
                             <div id="week-label">Текущая неделя</div>
-                            <div class="nav-btn"><i class="fas fa-chevron-right"></i></div>
+                            <button class="nav-btn" id="next-week" title="Следующая неделя"><i class="fas fa-chevron-right"></i></button>
+                            <button class="nav-btn" id="prev-month" title="Предыдущий месяц"><i class="fas fa-angle-double-left"></i></button>
+                            <button class="nav-btn" id="next-month" title="Следующий месяц"><i class="fas fa-angle-double-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -1498,6 +1589,10 @@
                         <div class="day-header">Воскресенье</div>
                     </div>
                     <div class="day-slots" id="global-day-slots"></div>
+                    <div class="recent-activity" style="margin-top:20px;">
+                        <h2 class="settings-title"><i class="fas fa-clock"></i> Предыдущие и следующие занятия</h2>
+                        <div id="timeline-sessions" class="activity-list"></div>
+                    </div>
                 </div>
             </div>
             
@@ -1592,7 +1687,11 @@
                         Чат с клиентами
                     </h1>
                     <div class="header-actions">
-                        <button class="btn btn-secondary" id="back-to-clients">
+                        <button class="btn btn-secondary" id="new-group-post">
+                            <i class="fas fa-bullhorn"></i>
+                            Новый пост в общую беседу
+                        </button>
+                        <button class="btn btn-secondary" id="back-to-clients" style="margin-left:10px;">
                             <i class="fas fa-arrow-left"></i>
                             К клиентам
                         </button>
@@ -1607,6 +1706,13 @@
                                 Список диалогов
                             </h2>
                             <div class="activity-list" id="chat-dialogs">
+                                <div class="activity-item" data-chat-id="all">
+                                    <div class="activity-icon"><i class="fas fa-users"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Общая беседа</div>
+                                        <div class="activity-desc">Сообщение всем клиентам</div>
+                                    </div>
+                                </div>
                                 <div class="activity-item" data-chat-id="ivanov">
                                     <div class="activity-icon"><i class="fas fa-user"></i></div>
                                     <div class="activity-content">
@@ -1708,7 +1814,7 @@
                 </div>
             </div>
 
-            <!-- Техподдержка -->
+            <!-- УЛУЧШЕННАЯ СТРАНИЦА ТЕХПОДДЕРЖКИ -->
             <div class="screen" id="support-screen">
                 <div class="page-header">
                     <h1 class="page-title">
@@ -1717,89 +1823,181 @@
                     </h1>
                 </div>
 
-                <div class="settings-container pop-in support-choice-full" id="support-choice">
-                    <div class="support-choice-grid">
-                        <div class="recent-activity choice-card choice-card-big" id="open-support-marketing">
-                            <h2 class="settings-title">
-                                <i class="fas fa-bullhorn"></i>
-                                Поднять посещаемость
-                            </h2>
-                            <div class="choice-desc">Услуги, цены, консультация и чат по покупке</div>
-                        </div>
-
-                        <div class="recent-activity choice-card choice-card-big" id="open-support-tech">
-                            <h2 class="settings-title">
-                                <i class="fas fa-triangle-exclamation"></i>
-                                Сообщить о технической ошибке
-                            </h2>
-                            <div class="choice-desc">Сразу открывается чат с техподдержкой</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Подсекция: Услуги продвижения -->
-                <div class="settings-container screen pop-in" id="support-marketing" style="display:none;">
-                    <div class="page-header" style="margin-top:-10px;">
-                        <h1 class="page-title" style="font-size:1.4rem;">
+                <div class="settings-container">
+                    <div class="support-tabs">
+                        <div class="support-tab active" data-tab="marketing">
                             <i class="fas fa-bullhorn"></i>
-                            Услуги по привлечению клиентов
-                        </h1>
-                        <div class="header-actions">
-                            <button class="btn btn-secondary" id="back-to-support-choice-1"><i class="fas fa-arrow-left"></i> Назад</button>
+                            Услуги продвижения
                         </div>
-                    </div>
-                    <div class="settings-section">
-                        <h2 class="settings-title"><i class="fas fa-list"></i> Пакеты и цены</h2>
-                        <div class="settings-options">
-                            <div class="setting-option">
-                                <div class="option-info">
-                                    <div class="option-title">Старт</div>
-                                    <div class="option-desc">Запуск рекламы, базовый лендинг • от ₽25 000/мес</div>
-                                </div>
-                                <button class="btn btn-primary chat-open-marketing">Написать в чат</button>
-                            </div>
-                            <div class="setting-option">
-                                <div class="option-info">
-                                    <div class="option-title">Рост</div>
-                                    <div class="option-desc">Мультиканальная реклама, аналитика • от ₽60 000/мес</div>
-                                </div>
-                                <button class="btn btn-primary chat-open-marketing">Написать в чат</button>
-                            </div>
-                            <div class="setting-option">
-                                <div class="option-info">
-                                    <div class="option-title">Максимум</div>
-                                    <div class="option-desc">Полный маркетинг под ключ • от ₽120 000/мес</div>
-                                </div>
-                                <button class="btn btn-primary chat-open-marketing">Написать в чат</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="settings-section">
-                        <h2 class="settings-title"><i class="fas fa-message"></i> Чат по покупке услуг</h2>
-                        <div style="display:flex;gap:12px;align-items:center;">
-                            <input id="marketing-chat-input" type="text" class="form-control" placeholder="Напишите вопрос..." style="flex:1;">
-                            <button class="btn btn-primary" id="marketing-chat-send"><i class="fas fa-paper-plane"></i> Отправить</button>
-                        </div>
-                        <div id="marketing-chat-box" class="recent-activity" style="margin-top:12px;max-height:260px;overflow:auto;"></div>
-                    </div>
-                </div>
-
-                <!-- Подсекция: Техническая поддержка (чат) -->
-                <div class="settings-container screen pop-in" id="support-tech" style="display:none;">
-                    <div class="page-header" style="margin-top:-10px;">
-                        <h1 class="page-title" style="font-size:1.4rem;">
+                        <div class="support-tab" data-tab="technical">
                             <i class="fas fa-wrench"></i>
-                            Чат техподдержки
-                        </h1>
-                        <div class="header-actions">
-                            <button class="btn btn-secondary" id="back-to-support-choice-2"><i class="fas fa-arrow-left"></i> Назад</button>
+                            Техническая поддержка
                         </div>
                     </div>
-                    <div style="display:flex;gap:12px;align-items:center;">
-                        <input id="tech-chat-input" type="text" class="form-control" placeholder="Опишите проблему..." style="flex:1;">
-                        <button class="btn btn-primary" id="tech-chat-send"><i class="fas fa-paper-plane"></i> Отправить</button>
+
+                    <!-- Вкладка услуг продвижения -->
+                    <div class="support-content active" id="marketing-content">
+                        <div class="settings-section">
+                            <h2 class="settings-title">
+                                <i class="fas fa-rocket"></i>
+                                Пакеты услуг по привлечению клиентов
+                            </h2>
+                            <div class="service-cards">
+                                <div class="service-card">
+                                    <div class="service-header">
+                                        <div>
+                                            <div class="service-title">Старт</div>
+                                            <div class="service-desc">Базовый пакет для начала продвижения</div>
+                                        </div>
+                                        <div class="service-price">от ₽25 000/мес</div>
+                                    </div>
+                                    <ul class="service-features">
+                                        <li><i class="fas fa-check"></i> Запуск таргетированной рекламы</li>
+                                        <li><i class="fas fa-check"></i> Базовый лендинг для привлечения клиентов</li>
+                                        <li><i class="fas fa-check"></i> Настройка аналитики</li>
+                                        <li><i class="fas fa-check"></i> Еженедельные отчеты</li>
+                                    </ul>
+                                    <button class="btn btn-primary chat-open-marketing" style="width:100%;">
+                                        <i class="fas fa-comment"></i> Обсудить в чате
+                                    </button>
+                                </div>
+                                
+                                <div class="service-card">
+                                    <div class="service-header">
+                                        <div>
+                                            <div class="service-title">Рост</div>
+                                            <div class="service-desc">Оптимальный пакет для стабильного роста</div>
+                                        </div>
+                                        <div class="service-price">от ₽60 000/мес</div>
+                                    </div>
+                                    <ul class="service-features">
+                                        <li><i class="fas fa-check"></i> Мультиканальная реклама</li>
+                                        <li><i class="fas fa-check"></i> Профессиональный лендинг</li>
+                                        <li><i class="fas fa-check"></i> Глубокая аналитика и A/B тестирование</li>
+                                        <li><i class="fas fa-check"></i> Ежедневный мониторинг и оптимизация</li>
+                                        <li><i class="fas fa-check"></i> Консультация специалиста</li>
+                                    </ul>
+                                    <button class="btn btn-primary chat-open-marketing" style="width:100%;">
+                                        <i class="fas fa-comment"></i> Обсудить в чате
+                                    </button>
+                                </div>
+                                
+                                <div class="service-card premium">
+                                    <div class="service-header">
+                                        <div>
+                                            <div class="service-title">Максимум</div>
+                                            <div class="service-desc">Полный маркетинг под ключ</div>
+                                        </div>
+                                        <div class="service-price">от ₽120 000/мес</div>
+                                    </div>
+                                    <ul class="service-features">
+                                        <li><i class="fas fa-check"></i> Полный комплекс маркетинговых услуг</li>
+                                        <li><i class="fas fa-check"></i> Индивидуальная стратегия продвижения</li>
+                                        <li><i class="fas fa-check"></i> Премиум-лендинг с высокой конверсией</li>
+                                        <li><i class="fas fa-check"></i> Круглосуточная поддержка и аналитика</li>
+                                        <li><i class="fas fa-check"></i> Персональный менеджер</li>
+                                        <li><i class="fas fa-check"></i> Гарантированный результат</li>
+                                    </ul>
+                                    <button class="btn btn-warning chat-open-marketing" style="width:100%; background: var(--warning);">
+                                        <i class="fas fa-crown"></i> Обсудить премиум пакет
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h2 class="settings-title">
+                                <i class="fas fa-comments"></i>
+                                Чат с отделом маркетинга
+                            </h2>
+                            <div class="chat-container">
+                                <div class="chat-messages" id="marketing-chat-box">
+                                    <div class="message support">
+                                        <div class="message-text">Здравствуйте! Я ваш персональный менеджер по маркетингу. Расскажите, какие цели вы ставите перед продвижением вашего центра?</div>
+                                        <div class="message-time">10:25</div>
+                                    </div>
+                                    <div class="message user">
+                                        <div class="message-text">Хотелось бы увеличить количество записей на наши кружки.</div>
+                                        <div class="message-time">10:26</div>
+                                    </div>
+                                    <div class="message support">
+                                        <div class="message-text">Отлично! Для этого мы можем предложить несколько стратегий. Какой бюджет вы рассматриваете?</div>
+                                        <div class="message-time">10:27</div>
+                                    </div>
+                                </div>
+                                <div class="chat-input-container">
+                                    <input type="text" class="chat-input" id="marketing-chat-input" placeholder="Напишите ваше сообщение...">
+                                    <button class="chat-send" id="marketing-chat-send">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div id="tech-chat-box" class="recent-activity" style="margin-top:12px;max-height:320px;overflow:auto;"></div>
+
+                    <!-- Вкладка технической поддержки -->
+                    <div class="support-content" id="technical-content">
+                        <div class="settings-section">
+                            <h2 class="settings-title">
+                                <i class="fas fa-life-ring"></i>
+                                Техническая поддержка
+                            </h2>
+                            <p style="margin-bottom: 20px; color: var(--gray);">Здесь вы можете сообщить о технических проблемах или задать вопросы по работе системы.</p>
+                            
+                            <div class="service-cards">
+                                <div class="service-card">
+                                    <div class="service-header">
+                                        <div>
+                                            <div class="service-title">Срочная помощь</div>
+                                            <div class="service-desc">Решение критических проблем</div>
+                                        </div>
+                                        <div class="service-price">Бесплатно</div>
+                                    </div>
+                                    <ul class="service-features">
+                                        <li><i class="fas fa-check"></i> Приоритетная обработка запроса</li>
+                                        <li><i class="fas fa-check"></i> Ответ в течение 15 минут</li>
+                                        <li><i class="fas fa-check"></i> Решение проблемы удаленно</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="service-card">
+                                    <div class="service-header">
+                                        <div>
+                                            <div class="service-title">Консультация</div>
+                                            <div class="service-desc">Помощь в использовании функций</div>
+                                        </div>
+                                        <div class="service-price">Бесплатно</div>
+                                    </div>
+                                    <ul class="service-features">
+                                        <li><i class="fas fa-check"></i> Ответы на вопросы по функционалу</li>
+                                        <li><i class="fas fa-check"></i> Помощь в настройке системы</li>
+                                        <li><i class="fas fa-check"></i> Обучение работе с панелью</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h2 class="settings-title">
+                                <i class="fas fa-comments"></i>
+                                Чат с технической поддержкой
+                            </h2>
+                            <div class="chat-container">
+                                <div class="chat-messages" id="tech-chat-box">
+                                    <div class="message support">
+                                        <div class="message-text">Здравствуйте! Чем могу помочь? Опишите вашу проблему как можно подробнее.</div>
+                                        <div class="message-time">10:25</div>
+                                    </div>
+                                </div>
+                                <div class="chat-input-container">
+                                    <input type="text" class="chat-input" id="tech-chat-input" placeholder="Опишите проблему...">
+                                    <button class="chat-send" id="tech-chat-send">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -1810,42 +2008,28 @@
                         <i class="fas fa-credit-card"></i>
                         Финансы
                     </h1>
-                    <div class="header-actions">
-                        <div style="display:flex;gap:10px;align-items:center;">
-                            <select id="fin-period" class="form-control" style="width:auto;">
-                                <option value="month">Этот месяц</option>
-                                <option value="last_month">Прошлый месяц</option>
-                                <option value="quarter">Квартал</option>
-                                <option value="year">Год</option>
-                            </select>
-                            <select id="fin-type" class="form-control" style="width:auto;">
-                                <option value="all">Все операции</option>
-                                <option value="income">Только доходы</option>
-                                <option value="expense">Только расходы</option>
-                            </select>
-                        </div>
-                    </div>
+                    <div class="header-actions"></div>
                 </div>
 
                 <div class="finance-overview">
                     <div class="finance-card">
-                        <div class="finance-value" id="kpi-income">₽0</div>
-                        <div class="finance-label">Доход</div>
+                        <div class="finance-value" id="kpi-income-current">₽0</div>
+                        <div class="finance-label">Доход за текущий месяц</div>
                     </div>
-                    
                     <div class="finance-card">
-                        <div class="finance-value" id="kpi-expense">₽0</div>
-                        <div class="finance-label">Расход</div>
+                        <div class="finance-value" id="kpi-income-prev">₽0</div>
+                        <div class="finance-label">Доход за прошлый месяц</div>
                     </div>
-                    
-                    <div class="finance-card">
-                        <div class="finance-value" id="kpi-net">₽0</div>
-                        <div class="finance-label">Чистая прибыль</div>
-                    </div>
-                    
-                    <div class="finance-card">
-                        <div class="finance-value" id="kpi-avg">₽0</div>
-                        <div class="finance-label">Средний чек</div>
+                </div>
+
+                <div class="settings-container choice-card" style="margin-top:20px;text-align:center;display:flex;align-items:center;justify-content:center;">
+                    <div>
+                        <h2 class="settings-title" style="justify-content:center;">
+                            <i class="fas fa-bullhorn"></i>
+                            Поднять доход
+                        </h2>
+                        <p style="color:var(--gray);margin-bottom:12px;">Реклама, лендинги и аналитика для роста дохода. Узнайте детали и цены.</p>
+                        <button class="btn btn-primary" id="finance-open-marketing"><i class="fas fa-bullhorn"></i> Узнать о продвижении</button>
                     </div>
                 </div>
 
@@ -1889,47 +2073,18 @@
                         <i class="fas fa-chart-bar"></i>
                         Аналитика и отчеты
                     </h1>
-                    <div class="header-actions">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-download"></i>
-                            Экспорт отчета
-                        </button>
-                    </div>
+                    <div class="header-actions"></div>
                 </div>
                 
                 <div class="analytics-grid">
                     <div class="analytics-card">
-                        <div class="chart-title">Посещаемость по дням</div>
+                        <div class="chart-title">Динамика записей</div>
                         <canvas id="attendance-chart"></canvas>
                     </div>
                     
                     <div class="analytics-card">
-                        <div class="chart-title">Популярность курсов</div>
-                        <canvas id="popularity-chart"></canvas>
-                    </div>
-                    
-                    <!-- KPI: Воронка заявок -->
-                    <div class="analytics-card">
-                        <div class="chart-title">Воронка заявок</div>
-                        <canvas id="funnel-chart"></canvas>
-                    </div>
-
-                    <!-- KPI: Конверсия по каналам -->
-                    <div class="analytics-card">
-                        <div class="chart-title">Конверсия по каналам</div>
-                        <canvas id="channels-chart"></canvas>
-                    </div>
-
-                    <!-- KPI: Повторные записи (retention) -->
-                    <div class="analytics-card">
-                        <div class="chart-title">Повторные записи</div>
-                        <canvas id="retention-chart"></canvas>
-                    </div>
-
-                    <!-- KPI: LTV и CAC -->
-                    <div class="analytics-card">
-                        <div class="chart-title">LTV vs CAC</div>
-                        <canvas id="ltv-cac-chart"></canvas>
+                        <div class="chart-title">Оценка кружка</div>
+                        <canvas id="rating-chart"></canvas>
                     </div>
                 </div>
             </div>
@@ -2045,6 +2200,49 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Профиль компании (публичная страница предпросмотра) -->
+            <div class="screen" id="company-profile-screen">
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="fas fa-building"></i>
+                        Профиль компании
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" id="back-to-dashboard-from-profile"><i class="fas fa-arrow-left"></i> На главную</button>
+                    </div>
+                </div>
+
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h2 class="settings-title"><i class="fas fa-id-card"></i> Об организации</h2>
+                        <div class="settings-options">
+                            <div class="setting-option">
+                                <div class="option-info">
+                                    <div class="option-title">Академия "Умница"</div>
+                                    <div class="option-desc">Город: Москва • Тел.: +7 (495) 123-45-67 • Email: info@umnitsa.ru</div>
+                                </div>
+                            </div>
+                            <div class="setting-option">
+                                <div class="option-info">
+                                    <div class="option-title">Описание</div>
+                                    <div class="option-desc">Современные кружки для детей: робототехника, программирование, творчество.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title"><i class="fas fa-graduation-cap"></i> Кружки</h2>
+                        <div id="public-courses" class="activity-list"></div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h2 class="settings-title"><i class="fas fa-star"></i> Рейтинги и отзывы</h2>
+                        <div class="activity-list" id="public-reviews"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2076,18 +2274,17 @@
                 const targetScreen = document.getElementById(targetScreenId);
                 targetScreen.classList.add('active');
 
-                // Если открыт экран техподдержки — показываем выбор с анимацией
+                // Если открыт экран техподдержки — по умолчанию активна вкладка маркетинга
                 if (targetScreenId === 'support-screen') {
-                    const choice = document.getElementById('support-choice');
-                    const marketing = document.getElementById('support-marketing');
-                    const tech = document.getElementById('support-tech');
-                    if (choice && marketing && tech) {
-                        choice.style.display = '';
-                        marketing.style.display = 'none';
-                        tech.style.display = 'none';
-                        choice.classList.remove('pop-in');
-                        void choice.offsetWidth; // restart animation
-                        choice.classList.add('pop-in');
+                    const tabs = document.querySelectorAll('.support-tab');
+                    const contents = document.querySelectorAll('.support-content');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    const marketingTab = document.querySelector('.support-tab[data-tab="marketing"]');
+                    const marketingContent = document.getElementById('marketing-content');
+                    if (marketingTab && marketingContent) {
+                        marketingTab.classList.add('active');
+                        marketingContent.classList.add('active');
                     }
                 }
                 
@@ -2117,6 +2314,61 @@
 
         // Инициализация простых графиков (заглушки)
         document.addEventListener('DOMContentLoaded', function() {
+            // Открытие профиля компании из блока в сайдбаре
+            const userSection = document.querySelector('.user-section');
+            const companyProfileScreen = document.getElementById('company-profile-screen');
+            const dashboardScreen = document.getElementById('dashboard-screen');
+            if (userSection && companyProfileScreen) {
+                userSection.addEventListener('click', function() {
+                    screens.forEach(screen => screen.classList.remove('active'));
+                    companyProfileScreen.classList.add('active');
+                    renderPublicCourses();
+                    renderPublicReviews();
+                });
+            }
+            const backFromProfile = document.getElementById('back-to-dashboard-from-profile');
+            if (backFromProfile && dashboardScreen) {
+                backFromProfile.addEventListener('click', function() {
+                    screens.forEach(screen => screen.classList.remove('active'));
+                    dashboardScreen.classList.add('active');
+                });
+            }
+
+            function renderPublicCourses() {
+                const container = document.getElementById('public-courses');
+                if (!container) return;
+                container.innerHTML = '';
+                Object.values(coursesData).forEach(course => {
+                    (course.groups || []).forEach(group => {
+                        const row = document.createElement('div');
+                        row.className = 'activity-item';
+                        row.innerHTML = `
+                            <div class="activity-icon"><i class="fas fa-graduation-cap"></i></div>
+                            <div class="activity-content">
+                                <div class="activity-title">${course.title} — ${group.name}</div>
+                                <div class="activity-desc">Возраст: ${group.age || '—'} • Цена: ${formatCurrency(group.price || 0)}</div>
+                            </div>
+                        `;
+                        container.appendChild(row);
+                    });
+                });
+            }
+
+            function renderPublicReviews() {
+                const container = document.getElementById('public-reviews');
+                if (!container) return;
+                container.innerHTML = '';
+                const example = document.createElement('div');
+                example.className = 'activity-item';
+                example.innerHTML = `
+                    <div class="activity-icon"><i class="fas fa-user"></i></div>
+                    <div class="activity-content">
+                        <div class="activity-title">Анна</div>
+                        <div class="activity-desc">"Очень нравится преподаватель!"</div>
+                    </div>
+                `;
+                container.appendChild(example);
+            }
             // Заглушки для графиков
             const chartCanvases = document.querySelectorAll('canvas');
             chartCanvases.forEach(canvas => {
@@ -2237,13 +2489,38 @@
                     } else if (this.textContent.includes('Скопировать')) {
                         navigator.clipboard.writeText('support@kidcircle.pro');
                         showNotification('Email скопирован: support@kidcircle.pro', 'success');
-                    } else if (this.textContent.includes('Создать отчет')) {
-                        showNotification('Отчет создан и отправлен на email', 'success');
                     } else if (this.textContent.includes('Экспорт отчета')) {
                         showNotification('Отчет экспортирован в формате PDF', 'success');
                     }
                 });
             });
+            // Переключение вкладок техподдержки (делегирование)
+            document.addEventListener('click', function(e) {
+                const tab = e.target.closest('.support-tab');
+                if (!tab) return;
+                const tabId = tab.getAttribute('data-tab');
+                const tabs = document.querySelectorAll('.support-tab');
+                const contents = document.querySelectorAll('.support-content');
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                const pane = document.getElementById(`${tabId}-content`);
+                if (pane) pane.classList.add('active');
+            });
+
+            // Кнопка промо на главной
+            const marketingPromo = document.getElementById('dashboard-marketing-promo');
+            if (marketingPromo) {
+                marketingPromo.addEventListener('click', function() {
+                    // открыть техподдержку сразу в маркетинге
+                    const supportNav = document.querySelector('[data-screen="support-screen"]');
+                    if (supportNav) supportNav.click();
+                    setTimeout(() => {
+                        const mTab = document.querySelector('.support-tab[data-tab="marketing"]');
+                        if (mTab) mTab.click();
+                    }, 80);
+                });
+            }
             
             // Обработчики для переключения недель в расписании
             const navButtons = document.querySelectorAll('.nav-btn');
@@ -2409,6 +2686,9 @@
 
             // --- Чат с клиентами ---
             const chatData = {
+                all: [
+                    { from: 'org', text: 'Добро пожаловать в общую беседу! Здесь будут объявления.' }
+                ],
                 ivanov: [
                     { from: 'client', text: 'Здравствуйте! Можно перенос занятия?' },
                     { from: 'org', text: 'Здравствуйте! Да, конечно, на какое время удобно?' }
@@ -2420,7 +2700,7 @@
 
             const chatScreen = document.getElementById('chat-screen');
             const clientsScreen = document.getElementById('clients-screen');
-            let currentChatId = 'ivanov';
+            let currentChatId = 'all';
 
             function renderMessages(chatId) {
                 const msgs = chatData[chatId] || [];
@@ -2468,6 +2748,19 @@
                 renderMessages(currentChatId);
                 showNotification('Сообщение отправлено', 'success');
             });
+
+            // Новый пост в общую беседу
+            const newGroupPostBtn = document.getElementById('new-group-post');
+            if (newGroupPostBtn) {
+                newGroupPostBtn.addEventListener('click', function() {
+                    currentChatId = 'all';
+                    screens.forEach(screen => screen.classList.remove('active'));
+                    chatScreen.classList.add('active');
+                    renderMessages('all');
+                    const input = document.getElementById('chat-input');
+                    if (input) input.placeholder = 'Общий пост для всех клиентов...';
+                });
+            }
 
             // Создание нового кружка
             document.getElementById('add-course-btn').addEventListener('click', function() {
@@ -2659,14 +2952,14 @@
                     slots.sort((a,b) => (a.slot.time > b.slot.time ? 1 : -1));
                     if (!slots.length) {
                         const empty = document.createElement('div');
-                        empty.className = 'time-slot available';
+                        empty.className = 'time-slot empty';
                         empty.innerHTML = '<div>—</div><div>Нет занятий</div><div></div>';
                         col.appendChild(empty);
                     } else {
                         slots.forEach(({course, group, slot}) => {
                             const ts = document.createElement('div');
                             ts.className = 'time-slot available';
-                            ts.innerHTML = `<div>${slot.time}</div><div>${course.title} • ${group.name}${group.age ? ' (' + group.age + ')' : ''}</div><div></div>`;
+                            ts.innerHTML = `<div>${slot.time}</div><div>${course.title} • ${group.name}${group.age ? ' (' + group.age + ')' : ''}</div><div class="slot-actions"><button class="slot-btn" data-edit-time>Перенести</button><button class="slot-btn" data-cancel>Отменить</button></div>`;
                             col.appendChild(ts);
                         });
                     }
@@ -2676,6 +2969,79 @@
 
             // первый рендер
             renderGlobalSchedule();
+
+            // Навигация по неделям/месяцам (упрощенно меняем заголовок)
+            let weekOffset = 0; // 0 = текущая
+            function updateWeekLabel() {
+                const label = document.getElementById('week-label');
+                const base = new Date();
+                const monday = new Date(base);
+                const day = monday.getDay();
+                const diffToMonday = (day === 0 ? -6 : 1) - day; // сделать понедельник
+                monday.setDate(base.getDate() + diffToMonday + weekOffset * 7);
+                const sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+                label.textContent = `${monday.toLocaleDateString('ru-RU')} — ${sunday.toLocaleDateString('ru-RU')}`;
+            }
+            const prevWeekBtn = document.getElementById('prev-week');
+            const nextWeekBtn = document.getElementById('next-week');
+            const prevMonthBtn = document.getElementById('prev-month');
+            const nextMonthBtn = document.getElementById('next-month');
+            if (prevWeekBtn) prevWeekBtn.addEventListener('click', () => { weekOffset -= 1; updateWeekLabel(); });
+            if (nextWeekBtn) nextWeekBtn.addEventListener('click', () => { weekOffset += 1; updateWeekLabel(); });
+            if (prevMonthBtn) prevMonthBtn.addEventListener('click', () => { weekOffset -= 4; updateWeekLabel(); });
+            if (nextMonthBtn) nextMonthBtn.addEventListener('click', () => { weekOffset += 4; updateWeekLabel(); });
+            updateWeekLabel();
+
+            // Редактирование слотов: перенос/отмена (упрощенно)
+            document.getElementById('global-day-slots').addEventListener('click', (e) => {
+                const editBtn = e.target.closest('[data-edit-time]');
+                const cancelBtn = e.target.closest('[data-cancel]');
+                if (editBtn) {
+                    const newTime = prompt('Новая время, например 14:30');
+                    if (!newTime) return;
+                    showNotification('Занятие перенесено на ' + newTime, 'success');
+                }
+                if (cancelBtn) {
+                    if (!confirm('Отменить занятие?')) return;
+                    const card = cancelBtn.closest('.time-slot');
+                    if (card) card.remove();
+                    showNotification('Занятие отменено', 'success');
+                }
+            });
+
+            // Списки прошлых и будущих занятий с темами и отметками посещаемости (демо)
+            function renderTimelineSessions() {
+                const box = document.getElementById('timeline-sessions');
+                if (!box) return;
+                box.innerHTML = '';
+                const samples = [
+                    { when: 'Прошедшее', date: '2025-05-10', course: 'Робототехника', group: 'Группа 1', topic: 'Датчики и моторы', attended: true },
+                    { when: 'Будущее', date: '2025-05-20', course: 'Робототехника', group: 'Группа 2', topic: 'Сборка манипулятора', attended: null },
+                ];
+                samples.forEach(s => {
+                    const row = document.createElement('div');
+                    row.className = 'activity-item';
+                    row.innerHTML = `
+                        <div class="activity-icon"><i class="fas ${s.when === 'Прошедшее' ? 'fa-check' : 'fa-clock'}"></i></div>
+                        <div class="activity-content">
+                            <div class="activity-title">${s.when}: ${new Date(s.date).toLocaleDateString('ru-RU')} — ${s.course} • ${s.group}</div>
+                            <div class="activity-desc">Тема: ${s.topic}</div>
+                        </div>
+                        <div>
+                            ${s.attended === null ? '<button class="btn btn-sm btn-secondary" data-mark>Отметить посещаемость</button>' : (s.attended ? '<span class="badge badge-success">Посетил</span>' : '<span class="badge badge-error">Отсутствовал</span>')}
+                        </div>
+                    `;
+                    box.appendChild(row);
+                });
+                box.addEventListener('click', (e) => {
+                    const mark = e.target.closest('[data-mark]');
+                    if (!mark) return;
+                    const choice = confirm('Отметить как присутствовал? Отклоните для отсутствовал.');
+                    mark.replaceWith(choice ? createBadge('success', 'Посетил') : createBadge('error', 'Отсутствовал'));
+                });
+            }
+            function createBadge(kind, text) { const s = document.createElement('span'); s.className = `badge badge-${kind}`; s.textContent = text; return s; }
+            renderTimelineSessions();
 
             // ------- Финансы -------
             const financeData = {
@@ -2694,17 +3060,33 @@
             }
 
             function renderFinance() {
-                const typeFilter = document.getElementById('fin-type').value;
                 const txContainer = document.getElementById('transactions');
                 txContainer.innerHTML = '';
 
-                let income = 0, expense = 0, count = 0;
+                // вычисление текущего и прошлого месяца
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+                const prevMonthDate = new Date(currentYear, currentMonth - 1, 1);
+                const prevMonth = prevMonthDate.getMonth();
+                const prevYear = prevMonthDate.getFullYear();
+
+                let incomeCurrent = 0, incomePrev = 0, expenseCurrent = 0, expensePrev = 0, countIncome = 0;
                 financeData.transactions
-                    .filter(tx => typeFilter === 'all' || tx.type === typeFilter)
                     .sort((a,b) => (a.date < b.date ? 1 : -1))
                     .forEach(tx => {
-                        if (tx.type === 'income') { income += tx.amount; } else { expense += tx.amount; }
-                        count += 1;
+                        const d = new Date(tx.date);
+                        const m = d.getMonth();
+                        const y = d.getFullYear();
+                        const isCurrent = (m === currentMonth && y === currentYear);
+                        const isPrev = (m === prevMonth && y === prevYear);
+                        if (tx.type === 'income') {
+                            if (isCurrent) { incomeCurrent += tx.amount; countIncome += 1; }
+                            if (isPrev) { incomePrev += tx.amount; }
+                        } else {
+                            if (isCurrent) { expenseCurrent += tx.amount; }
+                            if (isPrev) { expensePrev += tx.amount; }
+                        }
                         const row = document.createElement('div');
                         row.className = 'transaction-item';
                         row.innerHTML = `
@@ -2717,12 +3099,16 @@
                         txContainer.appendChild(row);
                     });
 
-                const net = income - expense;
-                const avg = count ? Math.round((income + expense) / count) : 0;
-                document.getElementById('kpi-income').textContent = formatCurrency(income);
-                document.getElementById('kpi-expense').textContent = formatCurrency(expense);
-                document.getElementById('kpi-net').textContent = formatCurrency(net);
-                document.getElementById('kpi-avg').textContent = formatCurrency(avg);
+                const net = incomeCurrent - expenseCurrent;
+                const avg = countIncome ? Math.round(incomeCurrent / countIncome) : 0;
+                const incomeCurrentEl = document.getElementById('kpi-income-current');
+                const incomePrevEl = document.getElementById('kpi-income-prev');
+                const netEl = document.getElementById('kpi-net');
+                const avgEl = document.getElementById('kpi-avg');
+                if (incomeCurrentEl) incomeCurrentEl.textContent = formatCurrency(incomeCurrent);
+                if (incomePrevEl) incomePrevEl.textContent = formatCurrency(incomePrev);
+                if (netEl) netEl.textContent = formatCurrency(net);
+                if (avgEl) avgEl.textContent = formatCurrency(avg);
             }
 
             // обработчики формы добавления операции
@@ -2742,13 +3128,21 @@
                 });
             }
 
-            const finType = document.getElementById('fin-type');
-            if (finType) finType.addEventListener('change', renderFinance);
-            const finPeriod = document.getElementById('fin-period');
-            if (finPeriod) finPeriod.addEventListener('change', renderFinance); // упрощенно, без реального периода
-
             // первый рендер финансов
             renderFinance();
+
+            // Кнопка промо на финансах
+            const financeOpenMarketing = document.getElementById('finance-open-marketing');
+            if (financeOpenMarketing) {
+                financeOpenMarketing.addEventListener('click', function() {
+                    const supportNav = document.querySelector('[data-screen="support-screen"]');
+                    if (supportNav) supportNav.click();
+                    setTimeout(() => {
+                        const openMarketingBtn = document.getElementById('open-support-marketing');
+                        if (openMarketingBtn) openMarketingBtn.click();
+                    }, 50);
+                });
+            }
         });
     </script>
 </body>
