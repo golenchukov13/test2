@@ -1,4 +1,4 @@
-нет смотри посещаемость будет отмечать преподаватель это аккаунт как раз его то есть когда мы создали группу создали занятие оно у нас подтянулось в расписание а ниже показывается списокм это занятие и нажам на него мы можем отменить или перенсти заполнить тему занятия и сипоск клиентов которые на него записаны мы отмечаем кто пришел а кто нет <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -2246,6 +2246,39 @@
         </div>
     </div>
 
+    <!-- Модал занятия: тема + посещаемость -->
+    <div id="lesson-modal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background:#fff; border-radius: 14px; box-shadow: var(--shadow-lg); width: 640px; max-width: 95vw;">
+            <div style="padding:18px 20px; border-bottom: 1px solid var(--light-gray); display:flex; align-items:center; justify-content:space-between;">
+                <div style="font-weight:800; font-size:1.1rem; color: var(--dark);">Занятие</div>
+                <button id="lesson-close" class="btn btn-sm btn-secondary">Закрыть</button>
+            </div>
+            <div style="padding: 16px 20px; display:flex; flex-direction:column; gap:14px;">
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                    <span class="badge badge-primary" id="lesson-course"></span>
+                    <span class="badge" id="lesson-group" style="background: var(--primary-light); color: var(--primary);"></span>
+                    <span class="badge" id="lesson-datetime" style="background:#eef2ff; color:#334155;"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Тема занятия</label>
+                    <input id="lesson-topic" type="text" class="form-control" placeholder="Например: Датчики и моторы">
+                </div>
+                <div>
+                    <div class="settings-title" style="display:flex; align-items:center; gap:8px; font-size:1rem;">
+                        <i class="fas fa-users"></i>
+                        Список записанных учеников
+                    </div>
+                    <div id="lesson-students" class="activity-list" style="margin-top:10px;"></div>
+                </div>
+            </div>
+            <div style="padding:16px 20px; border-top: 1px solid var(--light-gray); display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+                <button class="btn btn-secondary" id="lesson-reschedule"><i class="fas fa-clock"></i> Перенести</button>
+                <button class="btn btn-danger" id="lesson-cancel"><i class="fas fa-ban"></i> Отменить</button>
+                <button class="btn btn-success" id="lesson-save"><i class="fas fa-save"></i> Сохранить посещаемость</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Уведомление -->
     <div class="notification" id="notification"></div>
 
@@ -2959,7 +2992,11 @@
                         slots.forEach(({course, group, slot}) => {
                             const ts = document.createElement('div');
                             ts.className = 'time-slot available';
-                            ts.innerHTML = `<div>${slot.time}</div><div>${course.title} • ${group.name}${group.age ? ' (' + group.age + ')' : ''}</div><div class="slot-actions"><button class="slot-btn" data-edit-time>Перенести</button><button class="slot-btn" data-cancel>Отменить</button></div>`;
+                            ts.setAttribute('data-course-id', course.id);
+                            ts.setAttribute('data-group-id', group.id);
+                            ts.setAttribute('data-day', String(d));
+                            ts.setAttribute('data-time', slot.time);
+                            ts.innerHTML = `<div>${slot.time}</div><div>${course.title} • ${group.name}${group.age ? ' (' + group.age + ')' : ''}</div><div class="slot-actions"><button class="slot-btn" data-open-lesson>Управление</button></div>`;
                             col.appendChild(ts);
                         });
                     }
@@ -2994,8 +3031,20 @@
 
             // Редактирование слотов: перенос/отмена (упрощенно)
             document.getElementById('global-day-slots').addEventListener('click', (e) => {
+                const openBtn = e.target.closest('[data-open-lesson]');
                 const editBtn = e.target.closest('[data-edit-time]');
                 const cancelBtn = e.target.closest('[data-cancel]');
+                if (openBtn) {
+                    const slotEl = openBtn.closest('.time-slot');
+                    if (!slotEl) return;
+                    openLessonModal({
+                        courseId: slotEl.getAttribute('data-course-id'),
+                        groupId: slotEl.getAttribute('data-group-id'),
+                        day: Number(slotEl.getAttribute('data-day')),
+                        time: slotEl.getAttribute('data-time')
+                    });
+                    return;
+                }
                 if (editBtn) {
                     const newTime = prompt('Новая время, например 14:30');
                     if (!newTime) return;
@@ -3008,6 +3057,97 @@
                     showNotification('Занятие отменено', 'success');
                 }
             });
+
+            // ---- Посещаемость: модал ----
+            const attendanceState = {}; // key: `${courseId}|${groupId}|${day}|${time}` -> { topic, students: [{id,name,present}] }
+            const demoGroupStudents = {}; // key: groupId -> array of students
+
+            // демо-ученики по группам на основе карточек
+            function ensureDemoStudentsForGroup(groupId) {
+                if (demoGroupStudents[groupId]) return demoGroupStudents[groupId];
+                const base = [
+                    { id: groupId + '-s1', name: 'Иванов Иван' },
+                    { id: groupId + '-s2', name: 'Петрова Анна' },
+                    { id: groupId + '-s3', name: 'Сидоров Семен' }
+                ];
+                demoGroupStudents[groupId] = base;
+                return base;
+            }
+
+            function keyForSlot(courseId, groupId, day, time) {
+                return `${courseId}|${groupId}|${day}|${time}`;
+            }
+
+            function openLessonModal({ courseId, groupId, day, time }) {
+                const course = coursesData[courseId];
+                const group = (course && course.groups || []).find(g => g.id === groupId);
+                const key = keyForSlot(courseId, groupId, day, time);
+                const modal = document.getElementById('lesson-modal');
+                if (!modal) return;
+                const courseEl = document.getElementById('lesson-course');
+                const groupEl = document.getElementById('lesson-group');
+                const dtEl = document.getElementById('lesson-datetime');
+                const topicInput = document.getElementById('lesson-topic');
+                const list = document.getElementById('lesson-students');
+
+                courseEl.textContent = course ? course.title : '';
+                groupEl.textContent = group ? group.name : '';
+                dtEl.textContent = `${dayName(day)}, ${time}`;
+
+                // создать состояние, если нет
+                if (!attendanceState[key]) {
+                    const students = ensureDemoStudentsForGroup(groupId).map(s => ({ ...s, present: false }));
+                    attendanceState[key] = { topic: '', students };
+                }
+                topicInput.value = attendanceState[key].topic || '';
+                list.innerHTML = '';
+                attendanceState[key].students.forEach(st => {
+                    const row = document.createElement('div');
+                    row.className = 'activity-item';
+                    row.innerHTML = `
+                        <div class="activity-content">
+                            <div class="activity-title">${st.name}</div>
+                            <div class="activity-desc">${st.present ? '<span class="badge badge-success">Присутствовал</span>' : '<span class="badge badge-error">Отсутствовал</span>'}</div>
+                        </div>
+                        <div class="slot-actions">
+                            <button class="slot-btn" data-toggle-present="${st.id}">${st.present ? 'Снять' : 'Отметить'}</button>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+
+                list.addEventListener('click', function onClick(e) {
+                    const btn = e.target.closest('[data-toggle-present]');
+                    if (!btn) return;
+                    const sid = btn.getAttribute('data-toggle-present');
+                    const item = attendanceState[key].students.find(s => s.id === sid);
+                    if (!item) return;
+                    item.present = !item.present;
+                    openLessonModal({ courseId, groupId, day, time });
+                    list.removeEventListener('click', onClick);
+                }, { once: true });
+
+                // кнопки модала
+                document.getElementById('lesson-close').onclick = () => { modal.style.display = 'none'; };
+                document.getElementById('lesson-save').onclick = () => {
+                    attendanceState[key].topic = topicInput.value.trim();
+                    showNotification('Посещаемость сохранена', 'success');
+                    modal.style.display = 'none';
+                };
+                document.getElementById('lesson-reschedule').onclick = () => {
+                    const newTime = prompt('Новая время, например 14:30', time);
+                    if (!newTime) return;
+                    attendanceState[key].topic = topicInput.value.trim();
+                    showNotification('Занятие перенесено на ' + newTime, 'success');
+                };
+                document.getElementById('lesson-cancel').onclick = () => {
+                    if (!confirm('Отменить занятие?')) return;
+                    showNotification('Занятие отменено', 'success');
+                    modal.style.display = 'none';
+                };
+
+                modal.style.display = 'flex';
+            }
 
             // Списки прошлых и будущих занятий с темами и отметками посещаемости (демо)
             function renderTimelineSessions() {
