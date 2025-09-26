@@ -1213,6 +1213,107 @@
         .chat-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67,97,238,0.08); }
         .chat-send { margin-left: 8px; background: var(--primary); color: #fff; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
         .chat-send:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+        /* Добавленные стили для модальных окон техподдержки */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.7) translateY(-50px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1) translateY(0); opacity: 1; }
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: #ffffff;
+            border-radius: 20px 20px 0 0;
+        }
+        .modal-title { font-size: 1.8rem; font-weight: 700; display: flex; align-items: center; gap: 15px; }
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .modal-close:hover { background: rgba(255, 255, 255, 0.3); transform: rotate(90deg); }
+        .modal-body { padding: 30px; }
+
+        /* Секции продвижения */
+        .promotion-content { line-height: 1.7; }
+        .promotion-section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--light-gray); }
+        .promotion-section:last-child { border-bottom: none; margin-bottom: 0; }
+        .promotion-section h2 { color: var(--primary); margin-bottom: 15px; font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+        .promotion-section h2 i {
+            background: var(--primary-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        .price-tag { background: var(--primary-light); color: var(--primary); padding: 5px 12px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; display: inline-block; margin: 5px 0; }
+        .feature-list { list-style: none; margin: 15px 0; }
+        .feature-list li { padding: 8px 0; display: flex; align-items: center; gap: 10px; }
+        .feature-list li i { color: var(--success); width: 20px; }
+
+        /* Чат в модальном окне */
+        .chat-modal-container { display: flex; flex-direction: column; height: 500px; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 20px; background: #f9fafc; border-radius: 10px; display: flex; flex-direction: column; gap: 15px; }
+        .message { max-width: 70%; padding: 12px 16px; border-radius: 18px; line-height: 1.5; position: relative; animation: fadeInUp 0.3s ease; }
+        .message.support { align-self: flex-start; background: #ffffff; border-bottom-left-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); border: 1px solid var(--light-gray); }
+        .message.user { align-self: flex-end; background: var(--primary); color: #ffffff; border-bottom-right-radius: 5px; }
+        .message-time { font-size: 0.7rem; opacity: 0.7; margin-top: 5px; }
+        .chat-input-area { display: flex; padding: 15px 0 0; gap: 10px; }
+        .chat-input { flex: 1; padding: 12px 15px; border: 1px solid var(--light-gray); border-radius: 25px; outline: none; transition: var(--transition); }
+        .chat-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1); }
+        .chat-send-btn { background: var(--primary); color: #ffffff; border: none; border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); }
+        .chat-send-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .modal-content { width: 95%; margin: 20px; }
+            .modal-header { padding: 20px; }
+            .modal-body { padding: 20px; }
+            .message { max-width: 85%; }
+        }
     </style>
 </head>
 <body>
@@ -1220,6 +1321,143 @@
         <i class="fas fa-bars"></i>
     </div>
     
+    <!-- Модальное окно услуг продвижения -->
+    <div class="modal-overlay" id="promotion-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-rocket"></i>
+                    Услуги продвижения
+                </h2>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="promotion-content">
+                    <div class="promotion-section">
+                        <h2><i class="fas fa-bullseye"></i> Приводим целевых клиентов в ваш кружок. Гарантированно.</h2>
+                        <p>Заполните вашу группу благодаря самому умному помощнику для родителей в выборе занятий.</p>
+                        <p>Опубликовать свой кружок в нашем приложении — это не просто "еще одна площадка". Это прямой канал привлечения заинтересованных родителей. Мы предлагаем не только аудиторию, но и удобные инструменты для коммуникации и аналитики, чтобы вы понимали каждый шаг ваших клиентов. Попробуйте первый месяц размещения совершенно бесплатно!</p>
+                    </div>
+                    
+                    <div class="promotion-section">
+                        <h2><i class="fas fa-chart-line"></i> Как мы приводим к вам клиентов? (Структурируем и упрощаем)</h2>
+                        
+                        <h3>Базовое размещение — ваш фундамент <span class="price-tag">3000₽/месяц после пробного периода</span></h3>
+                        <p>Ваш кружок виден в общем поиске. Полный доступ к личному кабинету: управление заявками, расписанием, аналитика просмотров и кликов. Отлично для старта и постоянного присутствия.</p>
+                        
+                        <h3>Ускоренный старт: выделяйтесь для новичков</h3>
+                        <p>Бейдж "НОВИНКА" — привлеките внимание к новому кружку. <span class="price-tag">2500₽ на 3 дня</span>.</p>
+                    </div>
+                    
+                    <div class="promotion-section">
+                        <h2><i class="fas fa-crown"></i> Пакеты "Все включено" или "Абонемент"</h2>
+                        
+                        <h3>"Старт": <span class="price-tag">15 000₽ в месяц</span></h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Размещение + бейдж "Новое" на месяц</li>
+                            <li><i class="fas fa-check"></i> Размещение в "Рекомендуемых партнерах" на 2 недели</li>
+                        </ul>
+                        
+                        <h3>"Лидер": <span class="price-tag">30 000₽ в месяц</span></h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Размещение + ТОП-6 в категории</li>
+                            <li><i class="fas fa-check"></i> Бейдж "Премиум" + баннер на главной на неделю</li>
+                            <li><i class="fas fa-check"></i> Статья о кружке</li>
+                        </ul>
+                        
+                        <h3>"Максимум": <span class="price-tag">50 000₽ в месяц</span></h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> Полный охват: все вышеперечисленное</li>
+                            <li><i class="fas fa-check"></i> Приоритет в ИИ-тесте на месяц</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="promotion-section">
+                        <h2><i class="fas fa-user-graduate"></i> Пользователь проходит тест</h2>
+                        <p>На основе которого ИИ определяет к какой категории больше предрасположен ребенок. Например к Программированию и ниже он предлагает "перейти к кружкам по программированию" и рекомендуемые кружки по программированию (выделяются отдельно).</p>
+                        <p>В каждом городе кружков программирования масса. Если вы хотите, чтобы там отображался именно ваш кружок, то это будет стоить <span class="price-tag">7000 р за неделю расположения</span>. Если вы хотите чтобы просто после нажатия на кнопку "Перейти к кружкам программирования" ваш кружок там был, то это бесплатно! Но и там можно выделить ваш кружок, чтобы он не находился в тени других!</p>
+                        <p>Например поставить его в топ 6, чтобы на странице он отображался первым <span class="price-tag">3500 р неделя</span>, или Повесить ему бэйдж премиум кружок (<span class="price-tag">5000 р неделя</span>), популярное (<span class="price-tag">4000 р неделя</span>), новое (<span class="price-tag">2500 р на 3 дня</span>).</p>
+                        <p>При приобретение бейджа, кружки автоматически попадают в соответствующие фильтры, которые располагаются под тестом на главной странице и видны сразу же как только пользователь входит в приложение. Это очень крутой предмет продвижения так как это одна из самых главных фишек приложений, которое привлекает пользователей. Каждый новый зарегистрированный пользователь обязательно проходит этот тест сразу же.</p>
+                    </div>
+                    
+                    <div class="promotion-section">
+                        <h2><i class="fas fa-tags"></i> Дополнительные возможности продвижения</h2>
+                        
+                        <h3>Бейджи на карточки</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-tag"></i> Премиум кружок: <span class="price-tag">5000 р неделя</span></li>
+                            <li><i class="fas fa-tag"></i> Популярное: <span class="price-tag">4000 р неделя</span></li>
+                            <li><i class="fas fa-tag"></i> Новое: <span class="price-tag">2500 р на 3 дня</span></li>
+                        </ul>
+                        
+                        <h3>Баннеры на главной странице</h3>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-image"></i> Премиум + бейдж: <span class="price-tag">5000 р неделя</span></li>
+                            <li><i class="fas fa-image"></i> Популярное + бэйдж: <span class="price-tag">4000 р неделя</span></li>
+                            <li><i class="fas fa-image"></i> Для малышей: <span class="price-tag">5000 р неделя</span></li>
+                            <li><i class="fas fa-image"></i> Для школьников: <span class="price-tag">5000 р неделя</span></li>
+                        </ul>
+                        
+                        <h3>Реклама вашего кружка в статьях: <span class="price-tag">3900 р неделя</span></h3>
+                        <p>Главная страница приложения там есть раздел статей, где родители читают полезную информацию не только про детей, но и про то как выбрать кружок и какой лучше. Возможность чтобы с этой статьи пользователь напрямую перешел именно к вашему кружку и не изучал остальные в этой категории.</p>
+                        
+                        <h3>Блок строиз на главной: <span class="price-tag">5000 р неделя</span></h3>
+                        <p>Возможность рекламы не только ваших кружков, но и выкладывание фото, видео с занятий, чтобы еще больше заинтересовать родителя. Со сториз напрямую переход именно к вашему кружку.</p>
+                        
+                        <h3>Рекомендуемые партнеры: <span class="price-tag">4500 р неделя</span></h3>
+                        <p>Блок на главной странице где уже показываются карточки вашего кружка, ваш логотип и описание занятие. Пользователь еще не переходя на страницу поиска уже видит варианты кружков.</p>
+                        
+                        <h3>Раздел Выгодно: <span class="price-tag">3999 р неделя</span></h3>
+                        <p>Если у вас вдруг снижение цен на занятие или проходит какая- то акция, вы можете рекламировать это в нашем разделе на главной. Родители обязательно увидят это!</p>
+                        
+                        <h3>Раздел Ближайшие мероприятия: <span class="price-tag">3999 р неделя</span></h3>
+                        <p>Здесь родители смотрят куда бы пойти с ребенком на выходных или просто вечером. Вы же можете здесь рекламировать какое-нибудь свое мероприятие, например детский летний лагерь!</p>
+                    </div>
+                    
+                    <div class="promotion-section" style="text-align: center; padding: 20px; background: var(--primary-light); border-radius: 10px; margin-top: 30px;">
+                        <h2><i class="fas fa-handshake"></i> Свяжитесь с нашим менеджером</h2>
+                        <p>Чтобы подобрать индивидуальное продвижение под ваши цели и бюджет!</p>
+                        <button class="btn btn-primary" style="margin-top: 15px; padding: 12px 30px;">
+                            <i class="fas fa-paper-plane"></i> Связаться с менеджером
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно чата техподдержки -->
+    <div class="modal-overlay" id="support-chat-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-comments"></i>
+                    Чат технической поддержки
+                </h2>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="chat-modal-container">
+                    <div class="chat-messages" id="support-chat-messages">
+                        <div class="message support">
+                            <div class="message-text">Здравствуйте! Чем могу помочь? Опишите вашу проблему как можно подробнее.</div>
+                            <div class="message-time">10:25</div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" class="chat-input" id="support-chat-input" placeholder="Опишите вашу проблему...">
+                        <button class="chat-send-btn" id="support-chat-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="app-container">
         <!-- Левое меню -->
         <div class="sidebar">
@@ -1835,7 +2073,7 @@
                 </div>
             </div>
 
-            <!-- УЛУЧШЕННАЯ СТРАНИЦА ТЕХПОДДЕРЖКИ -->
+            <!-- Техподдержка -->
             <div class="screen" id="support-screen">
                 <div class="page-header">
                     <h1 class="page-title">
@@ -1845,177 +2083,26 @@
                 </div>
 
                 <div class="settings-container">
-                    <div class="support-tabs">
-                        <div class="support-tab active" data-tab="marketing">
-                            <i class="fas fa-bullhorn"></i>
-                            Услуги продвижения
-                        </div>
-                        <div class="support-tab" data-tab="technical">
-                            <i class="fas fa-wrench"></i>
-                            Техническая поддержка
-                        </div>
-                    </div>
-
-                    <!-- Вкладка услуг продвижения -->
-                    <div class="support-content active" id="marketing-content">
-                        <div class="settings-section">
-                            <h2 class="settings-title">
-                                <i class="fas fa-rocket"></i>
-                                Пакеты услуг по привлечению клиентов
-                            </h2>
-                            <div class="service-cards">
-                                <div class="service-card">
-                                    <div class="service-header">
-                                        <div>
-                                            <div class="service-title">Старт</div>
-                                            <div class="service-desc">Базовый пакет для начала продвижения</div>
-                                        </div>
-                                        <div class="service-price">от ₽25 000/мес</div>
-                                    </div>
-                                    <ul class="service-features">
-                                        <li><i class="fas fa-check"></i> Запуск таргетированной рекламы</li>
-                                        <li><i class="fas fa-check"></i> Базовый лендинг для привлечения клиентов</li>
-                                        <li><i class="fas fa-check"></i> Настройка аналитики</li>
-                                        <li><i class="fas fa-check"></i> Еженедельные отчеты</li>
-                                    </ul>
-                                    <button class="btn btn-primary chat-open-marketing" style="width:100%;">
-                                        <i class="fas fa-comment"></i> Обсудить в чате
-                                    </button>
-                                </div>
-                                
-                                <div class="service-card">
-                                    <div class="service-header">
-                                        <div>
-                                            <div class="service-title">Рост</div>
-                                            <div class="service-desc">Оптимальный пакет для стабильного роста</div>
-                                        </div>
-                                        <div class="service-price">от ₽60 000/мес</div>
-                                    </div>
-                                    <ul class="service-features">
-                                        <li><i class="fas fa-check"></i> Мультиканальная реклама</li>
-                                        <li><i class="fas fa-check"></i> Профессиональный лендинг</li>
-                                        <li><i class="fas fa-check"></i> Глубокая аналитика и A/B тестирование</li>
-                                        <li><i class="fas fa-check"></i> Ежедневный мониторинг и оптимизация</li>
-                                        <li><i class="fas fa-check"></i> Консультация специалиста</li>
-                                    </ul>
-                                    <button class="btn btn-primary chat-open-marketing" style="width:100%;">
-                                        <i class="fas fa-comment"></i> Обсудить в чате
-                                    </button>
-                                </div>
-                                
-                                <div class="service-card premium">
-                                    <div class="service-header">
-                                        <div>
-                                            <div class="service-title">Максимум</div>
-                                            <div class="service-desc">Полный маркетинг под ключ</div>
-                                        </div>
-                                        <div class="service-price">от ₽120 000/мес</div>
-                                    </div>
-                                    <ul class="service-features">
-                                        <li><i class="fas fa-check"></i> Полный комплекс маркетинговых услуг</li>
-                                        <li><i class="fas fa-check"></i> Индивидуальная стратегия продвижения</li>
-                                        <li><i class="fas fa-check"></i> Премиум-лендинг с высокой конверсией</li>
-                                        <li><i class="fas fa-check"></i> Круглосуточная поддержка и аналитика</li>
-                                        <li><i class="fas fa-check"></i> Персональный менеджер</li>
-                                        <li><i class="fas fa-check"></i> Гарантированный результат</li>
-                                    </ul>
-                                    <button class="btn btn-warning chat-open-marketing" style="width:100%; background: var(--warning);">
-                                        <i class="fas fa-crown"></i> Обсудить премиум пакет
-                                    </button>
-                                </div>
+                    <div class="support-choices">
+                        <div class="promo-card choice-card" id="open-promotion-modal">
+                            <div class="promo-icon">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <div class="promo-title">Услуги продвижения</div>
+                            <div class="promo-desc">Увеличьте количество заявок и записей с помощью наших маркетинговых решений</div>
+                            <div class="promo-arrow">
+                                <i class="fas fa-arrow-right"></i>
                             </div>
                         </div>
-
-                        <div class="settings-section">
-                            <h2 class="settings-title">
+                        
+                        <div class="promo-card choice-card" id="open-support-chat" style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);">
+                            <div class="promo-icon">
                                 <i class="fas fa-comments"></i>
-                                Чат с отделом маркетинга
-                            </h2>
-                            <div class="chat-container">
-                                <div class="chat-messages" id="marketing-chat-box">
-                                    <div class="message support">
-                                        <div class="message-text">Здравствуйте! Я ваш персональный менеджер по маркетингу. Расскажите, какие цели вы ставите перед продвижением вашего центра?</div>
-                                        <div class="message-time">10:25</div>
-                                    </div>
-                                    <div class="message user">
-                                        <div class="message-text">Хотелось бы увеличить количество записей на наши кружки.</div>
-                                        <div class="message-time">10:26</div>
-                                    </div>
-                                    <div class="message support">
-                                        <div class="message-text">Отлично! Для этого мы можем предложить несколько стратегий. Какой бюджет вы рассматриваете?</div>
-                                        <div class="message-time">10:27</div>
-                                    </div>
-                                </div>
-                                <div class="chat-input-container">
-                                    <input type="text" class="chat-input" id="marketing-chat-input" placeholder="Напишите ваше сообщение...">
-                                    <button class="chat-send" id="marketing-chat-send">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Вкладка технической поддержки -->
-                    <div class="support-content" id="technical-content">
-                        <div class="settings-section">
-                            <h2 class="settings-title">
-                                <i class="fas fa-life-ring"></i>
-                                Техническая поддержка
-                            </h2>
-                            <p style="margin-bottom: 20px; color: var(--gray);">Здесь вы можете сообщить о технических проблемах или задать вопросы по работе системы.</p>
-                            
-                            <div class="service-cards">
-                                <div class="service-card">
-                                    <div class="service-header">
-                                        <div>
-                                            <div class="service-title">Срочная помощь</div>
-                                            <div class="service-desc">Решение критических проблем</div>
-                                        </div>
-                                        <div class="service-price">Бесплатно</div>
-                                    </div>
-                                    <ul class="service-features">
-                                        <li><i class="fas fa-check"></i> Приоритетная обработка запроса</li>
-                                        <li><i class="fas fa-check"></i> Ответ в течение 15 минут</li>
-                                        <li><i class="fas fa-check"></i> Решение проблемы удаленно</li>
-                                    </ul>
-                                </div>
-                                
-                                <div class="service-card">
-                                    <div class="service-header">
-                                        <div>
-                                            <div class="service-title">Консультация</div>
-                                            <div class="service-desc">Помощь в использовании функций</div>
-                                        </div>
-                                        <div class="service-price">Бесплатно</div>
-                                    </div>
-                                    <ul class="service-features">
-                                        <li><i class="fas fa-check"></i> Ответы на вопросы по функционалу</li>
-                                        <li><i class="fas fa-check"></i> Помощь в настройке системы</li>
-                                        <li><i class="fas fa-check"></i> Обучение работе с панелью</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section">
-                            <h2 class="settings-title">
-                                <i class="fas fa-comments"></i>
-                                Чат с технической поддержкой
-                            </h2>
-                            <div class="chat-container">
-                                <div class="chat-messages" id="tech-chat-box">
-                                    <div class="message support">
-                                        <div class="message-text">Здравствуйте! Чем могу помочь? Опишите вашу проблему как можно подробнее.</div>
-                                        <div class="message-time">10:25</div>
-                                    </div>
-                                </div>
-                                <div class="chat-input-container">
-                                    <input type="text" class="chat-input" id="tech-chat-input" placeholder="Опишите проблему...">
-                                    <button class="chat-send" id="tech-chat-send">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
-                                </div>
+                            <div class="promo-title">Сообщить о проблеме</div>
+                            <div class="promo-desc">Напишите в чат технической поддержки для решения любых вопросов</div>
+                            <div class="promo-arrow">
+                                <i class="fas fa-arrow-right"></i>
                             </div>
                         </div>
                     </div>
@@ -2383,6 +2470,79 @@
 
         // Инициализация простых графиков (заглушки)
         document.addEventListener('DOMContentLoaded', function() {
+            // Добавлено: управление модальными окнами техподдержки
+            const promotionModal = document.getElementById('promotion-modal');
+            const supportChatModal = document.getElementById('support-chat-modal');
+            const openPromotionBtn = document.getElementById('open-promotion-modal');
+            const openSupportChatBtn = document.getElementById('open-support-chat');
+            const closeButtons = document.querySelectorAll('.modal-close');
+
+            function openModal(modal) {
+                if (!modal) return;
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal(modal) {
+                if (!modal) return;
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            if (openPromotionBtn && promotionModal) {
+                openPromotionBtn.addEventListener('click', function() { openModal(promotionModal); });
+            }
+            if (openSupportChatBtn && supportChatModal) {
+                openSupportChatBtn.addEventListener('click', function() { openModal(supportChatModal); });
+            }
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const modal = this.closest('.modal-overlay');
+                    closeModal(modal);
+                });
+            });
+            document.querySelectorAll('.modal-overlay').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) closeModal(this);
+                });
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal-overlay.active').forEach(m => closeModal(m));
+                }
+            });
+
+            // Добавлено: простой чат техподдержки в модальном окне
+            const supportChatMessages = document.getElementById('support-chat-messages');
+            const supportChatInput = document.getElementById('support-chat-input');
+            const supportChatSend = document.getElementById('support-chat-send');
+            if (supportChatSend && supportChatInput && supportChatMessages) {
+                function sendSupportMessage() {
+                    const text = (supportChatInput.value || '').trim();
+                    if (!text) return;
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'message user';
+                    userMessage.innerHTML = `
+                        <div class="message-text">${text}</div>
+                        <div class="message-time">${new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})}</div>
+                    `;
+                    supportChatMessages.appendChild(userMessage);
+                    supportChatInput.value = '';
+                    supportChatMessages.scrollTop = supportChatMessages.scrollHeight;
+                    setTimeout(() => {
+                        const supportMessage = document.createElement('div');
+                        supportMessage.className = 'message support';
+                        supportMessage.innerHTML = `
+                            <div class="message-text">Спасибо за обращение! Мы уже работаем над вашей проблемой. В ближайшее время с вами свяжется наш специалист.</div>
+                            <div class="message-time">${new Date().toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'})}</div>
+                        `;
+                        supportChatMessages.appendChild(supportMessage);
+                        supportChatMessages.scrollTop = supportChatMessages.scrollHeight;
+                    }, 1000);
+                }
+                supportChatSend.addEventListener('click', sendSupportMessage);
+                supportChatInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') sendSupportMessage(); });
+            }
             // Открытие профиля компании из блока в сайдбаре
             const userSection = document.querySelector('.user-section');
             const companyProfileScreen = document.getElementById('company-profile-screen');
